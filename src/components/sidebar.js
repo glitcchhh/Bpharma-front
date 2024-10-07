@@ -96,24 +96,68 @@ export default function NestedList() {
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/product/1") ? "#1976d2" : "inherit",
-                color: isSelected("/product/1") ? "#fff" : "inherit",
+                bgcolor: isSelected("/product/claim") ? "#1976d2" : "inherit",
+                color: isSelected("/product/claim") ? "#fff" : "inherit",
                 borderRadius: "5px"
               }}
-              onClick={() => handleNavigation("/product/1")}
+              onClick={() => handleNavigation("/product/claim")}
             >
-              <ListItemText primary="Product 1" />
+              <ListItemText primary="Claim" />
             </ListItemButton>
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/product/2") ? "#1976d2" : "inherit",
-                color: isSelected("/product/2") ? "#fff" : "inherit",
+                bgcolor: isSelected("/product/offer") ? "#1976d2" : "inherit",
+                color: isSelected("/product/offer") ? "#fff" : "inherit",
                 borderRadius: "5px"
               }}
-              onClick={() => handleNavigation("/product/2")}
+              onClick={() => handleNavigation("/product/offer")}
             >
-              <ListItemText primary="Product 2" />
+              <ListItemText primary="Offer" />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                pl: 4,
+                bgcolor: isSelected("/product/expiry") ? "#1976d2" : "inherit",
+                color: isSelected("/product/expiry") ? "#fff" : "inherit",
+                borderRadius: "5px"
+              }}
+              onClick={() => handleNavigation("/product/expiry")}
+            >
+              <ListItemText primary="Expiry" />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                pl: 4,
+                bgcolor: isSelected("/product/sample") ? "#1976d2" : "inherit",
+                color: isSelected("/product/sample") ? "#fff" : "inherit",
+                borderRadius: "5px"
+              }}
+              onClick={() => handleNavigation("/product/sample")}
+            >
+              <ListItemText primary="Sample" />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                pl: 4,
+                bgcolor: isSelected("/product/near-expiry") ? "#1976d2" : "inherit",
+                color: isSelected("/product/near-expiry") ? "#fff" : "inherit",
+                borderRadius: "5px"
+              }}
+              onClick={() => handleNavigation("/product/near-expiry")}
+            >
+              <ListItemText primary="Near Expiry" />
+            </ListItemButton>
+            <ListItemButton
+              sx={{
+                pl: 4,
+                bgcolor: isSelected("/product/compliments") ? "#1976d2" : "inherit",
+                color: isSelected("/product/compliments") ? "#fff" : "inherit",
+                borderRadius: "5px"
+              }}
+              onClick={() => handleNavigation("/product/compliments")}
+            >
+              <ListItemText primary="Compliments" />
             </ListItemButton>
           </List>
         </Collapse>

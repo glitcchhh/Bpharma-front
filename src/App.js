@@ -6,7 +6,9 @@ import Sidebar from './components/sidebar';
 import UserManagement from './pages/userManagement';
 import DistributorManagement from './pages/UserManagement/Distributor';
 import Dashboard from './pages/Dashboard';
-import Login from './pages/Login'; // Assuming you have a Login component
+import Login from './pages/Login'; 
+import Claim from './pages/Product/claim'; 
+import Offer from './pages/Product/offer'; 
 
 function Layout({ children }) {
   const location = useLocation();
@@ -37,6 +39,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/management/user" element={<UserManagement />} />
           <Route path="/management/distributor" element={<DistributorManagement />} />
+          <Route path="/product/claim" element={<Claim />} />
+          <Route path="/product/offer" element={<Offer />} />
           {/* Add more routes here */}
         </Routes>
       </Layout>
