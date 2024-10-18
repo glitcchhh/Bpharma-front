@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import React from "react";
 import {
   Avatar,
@@ -14,14 +13,22 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 export default function Login() {
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email");
+    const password = data.get("password");
+
+    // Add your form validation or login logic here
+    console.log({ email, password });
+
+    // After successful login, navigate to the dashboard
+    navigate('/dashboard');
   };
 
   return (
@@ -33,12 +40,12 @@ export default function Login() {
         sm={4}
         md={7}
         sx={{
-          position: "relative", // Make the Grid position relative
+          position: "relative", 
           backgroundColor: (t) =>
             t.palette.mode === "light"
               ? t.palette.grey[50]
               : t.palette.grey[900],
-          overflow: "hidden", // Ensures no overflow
+          overflow: "hidden", 
         }}
       >
         <img
@@ -48,7 +55,7 @@ export default function Login() {
             width: "100%",
             height: "100%",
             objectFit: "cover", 
-            position: "absolute", // Sticks the image inside the Grid
+            position: "absolute", 
             top: 0,
             left: 0,
           }}
@@ -72,7 +79,7 @@ export default function Login() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit} // Use handleSubmit on form submission
             sx={{ mt: 1 }}
           >
             <TextField
@@ -100,7 +107,7 @@ export default function Login() {
               label="Remember me"
             />
             <Button
-              type="submit"
+              type="submit" // This button triggers the form submit event
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
