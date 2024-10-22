@@ -1,5 +1,5 @@
-// src/components/NewUserModal.js
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import {
   Dialog,
   DialogActions,
@@ -13,6 +13,37 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 const NewUserModal = ({ open, handleClose }) => {
+  // State to hold form values
+  const [formData, setFormData] = useState({
+    userCode: "",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+  });
+
+  // Handle input change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    try {
+      // Send POST request
+      const response = await axios.post(
+        "http://localhost:8081/employee/create",
+        formData
+      );
+      console.log("User created successfully:", response.data);
+
+      // Close the modal on success
+      handleClose();
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle
@@ -47,7 +78,8 @@ const NewUserModal = ({ open, handleClose }) => {
             type="text"
             fullWidth
             variant="outlined"
-            defaultValue=""
+            value={formData.userCode}
+            onChange={handleChange}
             size="small"
           />
           <TextField
@@ -57,7 +89,8 @@ const NewUserModal = ({ open, handleClose }) => {
             type="text"
             fullWidth
             variant="outlined"
-            defaultValue=""
+            value={formData.name}
+            onChange={handleChange}
             size="small"
           />
           <TextField
@@ -67,15 +100,19 @@ const NewUserModal = ({ open, handleClose }) => {
             type="email"
             fullWidth
             variant="outlined"
-            defaultValue=""
+            value={formData.email}
+            onChange={handleChange}
             size="small"
           />
           <TextField
             margin="dense"
+            id="password"
             label="Password"
             type="password"
             fullWidth
             autoComplete="off"
+            value={formData.password}
+            onChange={handleChange}
             size="small"
           />
           <TextField
@@ -85,14 +122,15 @@ const NewUserModal = ({ open, handleClose }) => {
             type="tel"
             fullWidth
             variant="outlined"
-            defaultValue=""
+            value={formData.phone}
+            onChange={handleChange}
             size="small"
           />
         </Box>
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={handleClose}
+          onClick={handleSubmit} // Call handleSubmit on click
           variant="contained"
           color="primary"
           fullWidth
