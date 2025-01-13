@@ -1,4 +1,4 @@
-// src/pages/Product/claim.js
+// src/pages/Product/offer.js
 import React, { useState } from "react";
 import {
   Button,
@@ -13,27 +13,24 @@ import {
 import Modal from "../../components/Modal";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-// Sample Claim data
-const claims = [
+// Sample offer data
+const data = [
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    tsm_name: "TSM A",
+    product_name: "sample 1",
+    quantity: "5",
     remarks: "Text",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    tsm_name: "TSM B",
+    product_name: "sample 2",
+    quantity: "5",
     remarks: "Text",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    tsm_name: "TSM C",
+    product_name: "sample 3",
+    quantity: "5",
     remarks: "Text",
   },
 ];
@@ -59,14 +56,13 @@ const modalData = [
   },
 ];
 
-function Claim() {
+function Sample() {
   const [open, setOpen] = useState(false);
   // const [modalData, setModalData] = useState([]);
 
   return (
     <>
       <Modal open={open} close={() => setOpen(false)} data={modalData} />
-
       <div
         style={{
           padding: "20px",
@@ -74,31 +70,31 @@ function Claim() {
           background: "#fff",
           borderRadius: "5px",
         }}
+        className="sample"
+        id="sample"
       >
-        <h2>Product Claim</h2>
+        <h2>Product Sample</h2>
 
-        {/* Claim Table */}
+        {/* Offer Table */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Product</TableCell>
-                <TableCell>Free Quantity</TableCell>
-                <TableCell>Total Quantity</TableCell>
+                <TableCell>TSM name</TableCell>
+                <TableCell>Product name</TableCell>
+                <TableCell>Sample Qty</TableCell>
                 <TableCell>Remarks</TableCell>
                 <TableCell>Action</TableCell>
                 <TableCell>More Info</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {claims.map((claim, index) => (
+              {data.map((offer, index) => (
                 <TableRow key={index}>
-                  <TableCell>{claim.name}</TableCell>
-                  <TableCell>{claim.product}</TableCell>
-                  <TableCell>{claim.free_quantity}</TableCell>
-                  <TableCell>{claim.total_quantity}</TableCell>
-                  <TableCell>{claim.remarks}</TableCell>
+                  <TableCell>{offer.tsm_name}</TableCell>
+                  <TableCell>{offer.product_name}</TableCell>
+                  <TableCell>{offer.quantity}</TableCell>
+                  <TableCell>{offer.remarks}</TableCell>
                   <TableCell>
                     <Button variant="contained" color="success" size="small">
                       ✓
@@ -127,4 +123,4 @@ function Claim() {
   );
 }
 
-export default Claim;
+export default Sample;

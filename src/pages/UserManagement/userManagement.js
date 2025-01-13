@@ -11,7 +11,7 @@ import {
   Paper,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import NewUserModal from "./UserManagement/component/NewUserModal"; // Import the modal component
+import NewUserModal from "./component/NewUserModal"; // Import the modal component
 import { red } from "@mui/material/colors";
 
 // Sample user data
@@ -34,7 +34,14 @@ function UserManagement() {
   };
 
   return (
-    <div style={{ padding: "20px",margin:"20px", background:"#fff",borderRadius: "5px"  }}>
+    <div
+      style={{
+        padding: "20px",
+        margin: "20px",
+        background: "#fff",
+        borderRadius: "5px",
+      }}
+    >
       <h2>User Management</h2>
 
       {/* New User Button */}
@@ -51,7 +58,7 @@ function UserManagement() {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleClickOpen}
-          sx={{ textTransform: 'capitalize' }}
+          sx={{ textTransform: "capitalize" }}
           size="small"
         >
           New User
@@ -61,7 +68,7 @@ function UserManagement() {
       {/* User Table */}
       <TableContainer component={Paper}>
         <Table>
-          <TableHead sx={{bgcolor:"#c9d1db", color:"#fff"}}>
+          <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
             <TableRow>
               <TableCell>Code</TableCell>
               <TableCell>Name</TableCell>

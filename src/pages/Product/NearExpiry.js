@@ -1,4 +1,4 @@
-// src/pages/Product/claim.js
+// src/pages/Product/offer.js
 import React, { useState } from "react";
 import {
   Button,
@@ -10,30 +10,26 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { red } from "@mui/material/colors";
 import Modal from "../../components/Modal";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-// Sample Claim data
-const claims = [
+// Sample offer data
+const data = [
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    distributer: "kochi",
+    amount: "5",
     remarks: "Text",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    distributer: "kochi",
+    amount: "5",
     remarks: "Text",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
+    distributer: "kochi",
+    amount: "5",
     remarks: "Text",
   },
 ];
@@ -59,9 +55,8 @@ const modalData = [
   },
 ];
 
-function Claim() {
+function NearExpiry() {
   const [open, setOpen] = useState(false);
-  // const [modalData, setModalData] = useState([]);
 
   return (
     <>
@@ -75,30 +70,26 @@ function Claim() {
           borderRadius: "5px",
         }}
       >
-        <h2>Product Claim</h2>
+        <h2>Product Expiry</h2>
 
-        {/* Claim Table */}
+        {/* Offer Table */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Product</TableCell>
-                <TableCell>Free Quantity</TableCell>
-                <TableCell>Total Quantity</TableCell>
+                <TableCell>Distributer</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Remarks</TableCell>
                 <TableCell>Action</TableCell>
                 <TableCell>More Info</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {claims.map((claim, index) => (
+              {data.map((offer, index) => (
                 <TableRow key={index}>
-                  <TableCell>{claim.name}</TableCell>
-                  <TableCell>{claim.product}</TableCell>
-                  <TableCell>{claim.free_quantity}</TableCell>
-                  <TableCell>{claim.total_quantity}</TableCell>
-                  <TableCell>{claim.remarks}</TableCell>
+                  <TableCell>{offer.distributer}</TableCell>
+                  <TableCell>{offer.amount}</TableCell>
+                  <TableCell>{offer.remarks}</TableCell>
                   <TableCell>
                     <Button variant="contained" color="success" size="small">
                       ✓
@@ -127,4 +118,4 @@ function Claim() {
   );
 }
 
-export default Claim;
+export default NearExpiry;

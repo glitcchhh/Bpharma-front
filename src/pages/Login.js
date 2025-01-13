@@ -9,9 +9,10 @@ import {
   Link,
   Paper,
   Box,
-  Grid,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -28,7 +29,7 @@ export default function Login() {
     console.log({ email, password });
 
     // After successful login, navigate to the dashboard
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -37,15 +38,16 @@ export default function Login() {
       <Grid
         item
         xs={false}
-        sm={4}
-        md={7}
+        sm={false}
+        md={false}
+        lg={6}
         sx={{
-          position: "relative", 
+          position: "relative",
           backgroundColor: (t) =>
             t.palette.mode === "light"
               ? t.palette.grey[50]
               : t.palette.grey[900],
-          overflow: "hidden", 
+          overflow: "hidden",
         }}
       >
         <img
@@ -54,21 +56,45 @@ export default function Login() {
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover", 
-            position: "absolute", 
+            objectFit: "cover",
+            position: "absolute",
             top: 0,
             left: 0,
           }}
         />
       </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={6}
+        component={Paper}
+        elevation={6}
+        square
+      >
         <Box
           sx={{
-            my: 16,
-            mx: 6,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            // paddingTop: "35%",
+            paddingBottom: 6,
+            paddingX: {
+              xs: 2,
+              sm: 16,
+              md: 16,
+              lg: 16,
+              xl: 16,
+            },
+
+            paddingY: {
+              xs: "40%",
+              sm: "40%",
+              md: 6,
+              lg: 6,
+              xl: 6,
+            },
           }}
         >
           <img
@@ -114,13 +140,34 @@ export default function Login() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
+            <Grid
+              container
+              marginTop={{
+                xs: 3,
+                sm: 0,
+              }}
+            >
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                textAlign={{
+                  xs: "start",
+                }}
+              >
                 <Link href="#" variant="body2">
                   Forgot your password?
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                textAlign={{
+                  xs: "start",
+                  sm: "end",
+                }}
+              >
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
