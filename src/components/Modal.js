@@ -13,6 +13,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import AdvancedTable from "./AdvancedTable";
 
 const style = {
   position: "absolute",
@@ -28,7 +29,12 @@ const style = {
   borderRadius: "10px",
 };
 
-export default function BasicModal({ open, close, data }) {
+export default function BasicModal({
+  open,
+  close,
+  data,
+  modalTableHeadCells = [],
+}) {
   return (
     <div>
       <Modal
@@ -46,48 +52,15 @@ export default function BasicModal({ open, close, data }) {
             <CloseIcon onClick={close} />
           </span>
 
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
-                  <TableRow>
-                    <TableCell>Name ( Dr, Store )</TableCell>
-                    <TableCell>Product name</TableCell>
-                    <TableCell>Sample Qty</TableCell>
-                    <TableCell>Remarks</TableCell>
-                    <TableCell>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map((offer, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{offer.name}</TableCell>
-                      <TableCell>{offer.product_name}</TableCell>
-                      <TableCell>{offer.quantity}</TableCell>
-                      <TableCell>{offer.remarks}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          size="small"
-                        >
-                          ✓
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          size="small"
-                          style={{ marginLeft: "10px" }}
-                        >
-                          ✕
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Typography>
+          <div style={{ marginTop: "20px" }}>
+            {data.length && (
+              <AdvancedTable
+                data={data}
+                showMoreData={() => {}}
+                headCells={modalTableHeadCells}
+              />
+            )}
+          </div>
         </Box>
       </Modal>
     </div>

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Modal from "../../components/Modal";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { useAuth } from "../../contexts/AuthProvider";
 
 // Sample Claim data
 const claims = [
@@ -62,22 +63,17 @@ const modalData = [
 function Claim() {
   const [open, setOpen] = useState(false);
   // const [modalData, setModalData] = useState([]);
+  const { token } = useAuth();
+
+  console.log("token :: ", token);
 
   return (
     <>
       <Modal open={open} close={() => setOpen(false)} data={modalData} />
 
-      <div
-        style={{
-          padding: "20px",
-          margin: "20px",
-          background: "#fff",
-          borderRadius: "5px",
-        }}
-      >
+      <>
         <h2>Product Claim</h2>
 
-        {/* Claim Table */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
@@ -122,7 +118,7 @@ function Claim() {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </>
     </>
   );
 }

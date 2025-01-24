@@ -62,14 +62,7 @@ function NearExpiry() {
     <>
       <Modal open={open} close={() => setOpen(false)} data={modalData} />
 
-      <div
-        style={{
-          padding: "20px",
-          margin: "20px",
-          background: "#fff",
-          borderRadius: "5px",
-        }}
-      >
+      <>
         <h2>Product Expiry</h2>
 
         {/* Offer Table */}
@@ -113,7 +106,7 @@ function NearExpiry() {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </>
     </>
   );
 }

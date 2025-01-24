@@ -43,14 +43,7 @@ const offers = [
 
 function Offer() {
   return (
-    <div
-      style={{
-        padding: "20px",
-        margin: "20px",
-        background: "#fff",
-        borderRadius: "5px",
-      }}
-    >
+    <>
       <h2>Product Offer</h2>
 
       {/* Offer Table */}
@@ -94,7 +87,7 @@ function Offer() {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   );
 }
 

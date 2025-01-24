@@ -34,14 +34,7 @@ function UserManagement() {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        margin: "20px",
-        background: "#fff",
-        borderRadius: "5px",
-      }}
-    >
+    <>
       <h2>User Management</h2>
 
       {/* New User Button */}
@@ -105,7 +98,7 @@ function UserManagement() {
 
       {/* Modal for Adding New User */}
       <NewUserModal open={open} handleClose={handleClose} />
-    </div>
+    </>
   );
 }
 

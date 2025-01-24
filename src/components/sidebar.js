@@ -49,7 +49,7 @@ export default function NestedList() {
         bgcolor: "background.paper",
       }}
     >
-      <List component="nav" sx={{ padding: 0,margin:"0px 10px" }}>
+      <List component="nav" sx={{ padding: 0, margin: "0px 10px" }}>
         {/* Logo section */}
         <Box
           sx={{
@@ -74,7 +74,7 @@ export default function NestedList() {
           sx={{
             bgcolor: isSelected("/dashboard") ? "#1976d2" : "inherit",
             color: isSelected("/dashboard") ? "#fff" : "inherit",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
           <ListItemIcon>
@@ -98,7 +98,7 @@ export default function NestedList() {
                 pl: 4,
                 bgcolor: isSelected("/product/claim") ? "#1976d2" : "inherit",
                 color: isSelected("/product/claim") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/claim")}
             >
@@ -109,7 +109,7 @@ export default function NestedList() {
                 pl: 4,
                 bgcolor: isSelected("/product/offer") ? "#1976d2" : "inherit",
                 color: isSelected("/product/offer") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/offer")}
             >
@@ -120,7 +120,7 @@ export default function NestedList() {
                 pl: 4,
                 bgcolor: isSelected("/product/expiry") ? "#1976d2" : "inherit",
                 color: isSelected("/product/expiry") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/expiry")}
             >
@@ -131,7 +131,7 @@ export default function NestedList() {
                 pl: 4,
                 bgcolor: isSelected("/product/sample") ? "#1976d2" : "inherit",
                 color: isSelected("/product/sample") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/sample")}
             >
@@ -140,9 +140,11 @@ export default function NestedList() {
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/product/near-expiry") ? "#1976d2" : "inherit",
+                bgcolor: isSelected("/product/near-expiry")
+                  ? "#1976d2"
+                  : "inherit",
                 color: isSelected("/product/near-expiry") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/near-expiry")}
             >
@@ -151,9 +153,11 @@ export default function NestedList() {
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/product/compliments") ? "#1976d2" : "inherit",
+                bgcolor: isSelected("/product/compliments")
+                  ? "#1976d2"
+                  : "inherit",
                 color: isSelected("/product/compliments") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/product/compliments")}
             >
@@ -177,7 +181,7 @@ export default function NestedList() {
                 pl: 4,
                 bgcolor: isSelected("/management/user") ? "#1976d2" : "inherit",
                 color: isSelected("/management/user") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/management/user")}
             >
@@ -189,9 +193,13 @@ export default function NestedList() {
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/management/distributor") ? "#1976d2" : "inherit",
-                color: isSelected("/management/distributor") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                bgcolor: isSelected("/management/distributor")
+                  ? "#1976d2"
+                  : "inherit",
+                color: isSelected("/management/distributor")
+                  ? "#fff"
+                  : "inherit",
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/management/distributor")}
             >
@@ -203,9 +211,11 @@ export default function NestedList() {
             <ListItemButton
               sx={{
                 pl: 4,
-                bgcolor: isSelected("/management/territory") ? "#1976d2" : "inherit",
+                bgcolor: isSelected("/management/territory")
+                  ? "#1976d2"
+                  : "inherit",
                 color: isSelected("/management/territory") ? "#fff" : "inherit",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               onClick={() => handleNavigation("/management/territory")}
             >
@@ -225,7 +235,7 @@ export default function NestedList() {
           sx={{
             bgcolor: isSelected("/settings") ? "#1976d2" : "inherit",
             color: isSelected("/settings") ? "#fff" : "inherit",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
           <ListItemIcon>
@@ -239,7 +249,7 @@ export default function NestedList() {
           sx={{
             bgcolor: isSelected("/logout") ? "#1976d2" : "inherit",
             color: isSelected("/logout") ? "#fff" : "inherit",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
           <ListItemIcon>

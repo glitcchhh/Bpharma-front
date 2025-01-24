@@ -21,6 +21,8 @@ import NewDistributorModal from "./component/NewDistributorModal"; // Import the
 import { red } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 
 function DistributorManagementModal() {
   const [open, setOpen] = useState(false);
@@ -90,14 +92,7 @@ function DistributorManagementModal() {
 
   return (
     <>
-      <div
-        style={{
-          padding: "20px",
-          margin: "20px",
-          background: "#fff",
-          borderRadius: "5px",
-        }}
-      >
+      <>
         <h2>Distributor Management</h2>
 
         {/* New Distributor Button */}
@@ -131,7 +126,7 @@ function DistributorManagementModal() {
                 <TableCell style={{ minWidth: "140px", width: "140px" }}>
                   Action
                 </TableCell>
-                <TableCell style={{ minWidth: "140px", width: "140px" }}>
+                <TableCell style={{ minWidth: "175px", width: "175px" }}>
                   Option
                 </TableCell>
               </TableRow>
@@ -146,6 +141,7 @@ function DistributorManagementModal() {
                           name="name"
                           value={editValues.name}
                           onChange={handleEditChange}
+                          size="small"
                         />
                       </TableCell>
                       <TableCell>
@@ -153,6 +149,7 @@ function DistributorManagementModal() {
                           name="territory"
                           value={editValues.territory}
                           onChange={handleEditChange}
+                          size="small"
                         />
                       </TableCell>
                       <TableCell>
@@ -160,6 +157,7 @@ function DistributorManagementModal() {
                           name="email"
                           value={editValues.email}
                           onChange={handleEditChange}
+                          size="small"
                         />
                       </TableCell>
                       <TableCell>
@@ -167,6 +165,7 @@ function DistributorManagementModal() {
                           name="phone"
                           value={editValues.phone}
                           onChange={handleEditChange}
+                          size="small"
                         />
                       </TableCell>
                       <TableCell>
@@ -174,16 +173,19 @@ function DistributorManagementModal() {
                           variant="contained"
                           color="success"
                           size="small"
+                          style={{
+                            minWidth: "auto",
+                          }}
                         >
-                          ✓
+                          <CheckIcon />
                         </Button>
                         <Button
                           variant="contained"
                           color="error"
                           size="small"
-                          style={{ marginLeft: "10px" }}
+                          style={{ marginLeft: "10px", minWidth: "auto" }}
                         >
-                          ✕
+                          <ClearIcon />
                         </Button>
                       </TableCell>
                       <TableCell>
@@ -192,6 +194,9 @@ function DistributorManagementModal() {
                           color="success"
                           size="small"
                           onClick={saveEdit}
+                          style={{
+                            minWidth: "auto",
+                          }}
                         >
                           Save
                         </Button>
@@ -201,6 +206,7 @@ function DistributorManagementModal() {
                           style={{
                             backgroundColor: "grey",
                             marginLeft: "10px",
+                            minWidth: "auto",
                           }}
                           onClick={() => setEditingIdx(null)}
                         >
@@ -219,24 +225,30 @@ function DistributorManagementModal() {
                           variant="contained"
                           color="success"
                           size="small"
+                          style={{
+                            minWidth: "auto",
+                          }}
                         >
-                          ✓
+                          <CheckIcon />
                         </Button>
                         <Button
                           variant="contained"
                           color="error"
                           size="small"
-                          style={{ marginLeft: "10px" }}
+                          style={{ marginLeft: "10px", minWidth: "auto" }}
                         >
-                          ✕
+                          <ClearIcon />
                         </Button>
                       </TableCell>
                       <TableCell>
                         <Button
                           variant="contained"
-                          color="info"
+                          color="success"
                           size="small"
                           onClick={() => startEditing(index, distributor)}
+                          style={{
+                            minWidth: "auto",
+                          }}
                         >
                           <EditIcon />
                         </Button>
@@ -244,7 +256,7 @@ function DistributorManagementModal() {
                           variant="contained"
                           color="error"
                           size="small"
-                          style={{ marginLeft: "10px" }}
+                          style={{ marginLeft: "10px", minWidth: "auto" }}
                           onClick={() => handleDeleteClick(index)}
                         >
                           <DeleteIcon />
@@ -260,7 +272,7 @@ function DistributorManagementModal() {
 
         {/* Modal for Adding New distributor */}
         <NewDistributorModal open={open} handleClose={handleClose} />
-      </div>
+      </>
 
       <Dialog
         open={openDeletePopOver}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Avatar,
   Button,
@@ -13,24 +13,58 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useAuth } from "../contexts/AuthProvider";
+import { useLogin } from "../hooks/useLogin";
+
+const names = ["emp_code", "user_password"];
 
 export default function Login() {
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const { setUser, setToken } = useAuth();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { saveLogin } = useLogin();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get("email");
-    const password = data.get("password");
 
-    // Add your form validation or login logic here
-    console.log({ email, password });
+    const loginData = {
+      [names[0]]: data.get(names[0]),
+      [names[1]]: data.get(names[1]),
+    };
 
-    // After successful login, navigate to the dashboard
-    navigate("/dashboard");
+    try {
+      const response = await saveLogin(loginData);
+      console.log({ response });
+
+      if (response.data.status !== "OK") return;
+      const user = response.data.data.userData;
+      const auth_token = response.data.data.auth_token;
+
+      setUser(user);
+      setToken(auth_token);
+      sessionStorage.setItem("site", auth_token);
+
+      navigate("/dashboard");
+      return;
+    } catch (error) {
+      const errorMessage = error.response.data.error.message;
+      const email = errorMessage.find(({ field }) => field == names[0]);
+      const password = errorMessage.find(({ field }) => field == names[1]);
+
+      setError(() => {
+        return {
+          email,
+          password,
+        };
+      });
+      return;
+    }
   };
+
+  const mailError = error?.email;
+  const passwordError = error?.password;
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -112,21 +146,25 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id={names[0]}
               label="Email Address"
-              name="email"
-              autoComplete="email"
+              name={names[0]}
+              autoComplete={names[0]}
               autoFocus
+              error={!!mailError?.field}
+              helperText={mailError?.message}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
+              name={names[1]}
+              label="password"
+              type={names[1]}
+              id={names[1]}
               autoComplete="current-password"
+              error={!!passwordError?.field}
+              helperText={passwordError?.message}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
