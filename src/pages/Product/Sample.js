@@ -91,9 +91,20 @@ function Sample() {
       });
 
       if (response.data.status !== "SUCCESS") return;
-      // setData(response.data.data);
+
+      const tableFormattedData = response.data.data.map((obj) => {
+        return {
+          id: obj.employee.emp_id,
+          code: obj.employee.emp_code,
+          product_name: obj.product.product_name,
+          quantity: obj.total_qty,
+          remarks: obj.remarks,
+        };
+      });
+
+      setData(tableFormattedData);
       // setData([])
-      setData(generateSampleDataForTable(10));
+      // setData(generateSampleDataForTable(10));
 
       return;
     } catch (error) {
