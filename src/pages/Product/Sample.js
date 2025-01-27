@@ -1,15 +1,17 @@
 // src/pages/Product/offer.js
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
-import {
-  generateSampleData,
-  generateSampleDataForTable,
-} from "../../constants/DummyData";
+// import {
+//   generateSampleData,
+//   generateSampleDataForTable,
+// } from "../../constants/DummyData";
+import "../../assets/scss/custom.scss";
 
+// make sure data passed to table have same id as modalTableHeadCells passed to its table
 const modalTableHeadCells = [
   {
     id: "id",
@@ -36,7 +38,7 @@ const modalTableHeadCells = [
   },
 ];
 
-// make sure data passed to table have same id as headCells passed to table
+// make sure data passed to table have same id as headCells passed to its table
 const headCells = [
   {
     id: "id",
@@ -84,7 +86,7 @@ function Sample() {
     setOpen(false);
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
         url: `api/list-sample?page=${1}&limit=${10}&search=${""}&sortBy=${"sample_req_id"}&sortOrder=${"desc"}`,
@@ -111,7 +113,7 @@ function Sample() {
       console.log({ error });
       return;
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (token) {

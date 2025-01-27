@@ -180,8 +180,8 @@ function EnhancedTableToolbar(props) {
         </>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon onClick={openFilter} />
+          <IconButton onClick={openFilter}>
+            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -325,25 +325,35 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
                       {headCells.map((headCell, index) => {
                         if (headCell.id == "id") {
                           return (
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                                onClick={(event) => handleClick(event, row.id)}
-                              />
-                            </TableCell>
+                            <React.Fragment key={index}>
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": labelId,
+                                  }}
+                                  onClick={(event) =>
+                                    handleClick(event, row.id)
+                                  }
+                                />
+                              </TableCell>
+                            </React.Fragment>
                           );
                         } else if (headCell.id == "more") {
                           return (
-                            <TableCell>
-                              <MoreHorizIcon onClick={showMoreData} />
-                            </TableCell>
+                            <React.Fragment key={index}>
+                              <TableCell>
+                                <MoreHorizIcon onClick={showMoreData} />
+                              </TableCell>
+                            </React.Fragment>
                           );
                         } else {
-                          return <TableCell>{row[headCell.id]}</TableCell>;
+                          return (
+                            <React.Fragment key={index}>
+                              <TableCell>{row[headCell.id]}</TableCell>
+                            </React.Fragment>
+                          );
                         }
                       })}
                     </TableRow>

@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,21 +8,36 @@ import {
 } from "react-router-dom";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
-import UserManagement from "./pages/UserManagement/userManagement";
-import DistributorManagement from "./pages/UserManagement/Distributor";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Claim from "./pages/Product/claim";
-import Offer from "./pages/Product/offer";
-import Expiry from "./pages/Product/Expiry";
-import Sample from "./pages/Product/Sample";
-import "./assets/scss/custom.scss";
-import NearExpiry from "./pages/Product/NearExpiry";
-import Compliments from "./pages/Product/Compliments";
+// import UserManagement from "./pages/UserManagement/userManagement";
+// import DistributorManagement from "./pages/UserManagement/Distributor";
+// import Dashboard from "./pages/Dashboard";
+// import Login from "./pages/Login";
+// import Claim from "./pages/Product/claim";
+// import Offer from "./pages/Product/offer";
+// import Expiry from "./pages/Product/Expiry";
+// import "./assets/scss/custom.scss";
+// import NearExpiry from "./pages/Product/NearExpiry";
+// import Compliments from "./pages/Product/Compliments";
 import ResponsiveDrawer from "./components/SideBarNew";
 import { Box } from "@mui/material";
 import AuthProvider from "./contexts/AuthProvider";
-import Logout from "./pages/Logout";
+// import Logout from "./pages/Logout";
+
+const Sample = React.lazy(() => import("./pages/Product/Sample"));
+const UserManagement = React.lazy(() =>
+  import("./pages/UserManagement/userManagement")
+);
+const DistributorManagement = React.lazy(() =>
+  import("./pages/UserManagement/Distributor")
+);
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Claim = React.lazy(() => import("./pages/Product/claim"));
+const Offer = React.lazy(() => import("./pages/Product/offer"));
+const Expiry = React.lazy(() => import("./pages/Product/Expiry"));
+const NearExpiry = React.lazy(() => import("./pages/Product/NearExpiry"));
+const Compliments = React.lazy(() => import("./pages/Product/Compliments"));
+const Logout = React.lazy(() => import("./pages/Logout"));
 
 function Layout({ children }) {
   const location = useLocation();
@@ -64,23 +79,25 @@ function App() {
     <Router>
       <AuthProvider>
         <Layout>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/management/user" element={<UserManagement />} />
-            <Route
-              path="/management/distributor"
-              element={<DistributorManagement />}
-            />
-            <Route path="/product/claim" element={<Claim />} />
-            <Route path="/product/offer" element={<Offer />} />
-            <Route path="/product/expiry" element={<Expiry />} />
-            <Route path="/product/sample" element={<Sample />} />
-            <Route path="/product/near-expiry" element={<NearExpiry />} />
-            <Route path="/product/compliments" element={<Compliments />} />
-            {/* Add more routes here */}
-          </Routes>
+          <Suspense fallback={"loading ...."}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/management/user" element={<UserManagement />} />
+              <Route
+                path="/management/distributor"
+                element={<DistributorManagement />}
+              />
+              <Route path="/product/claim" element={<Claim />} />
+              <Route path="/product/offer" element={<Offer />} />
+              <Route path="/product/expiry" element={<Expiry />} />
+              <Route path="/product/sample" element={<Sample />} />
+              <Route path="/product/near-expiry" element={<NearExpiry />} />
+              <Route path="/product/compliments" element={<Compliments />} />
+              {/* Add more routes here */}
+            </Routes>
+          </Suspense>
         </Layout>
       </AuthProvider>
     </Router>
