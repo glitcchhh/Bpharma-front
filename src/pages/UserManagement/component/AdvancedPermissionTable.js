@@ -13,7 +13,6 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -23,7 +22,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import Filter from "./Filter";
+import Filter from "../../../components/Filter";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -58,18 +57,21 @@ function EnhancedTableHead(props) {
   return (
     <TableHead sx={{ backgroundColor: "#5037f436" }}>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => {
+          if (headCell.id == "id") {
+            return (
+              <TableCell padding="checkbox">
+                <input
+                  className="permission-box"
+                  type="checkbox"
+                  checked={rowCount > 0 && numSelected === rowCount}
+                  onChange={onSelectAllClick}
+                  style={{ float: "right" }}
+                />
+              </TableCell>
+            );
+          }
+
           if (headCell.id != "id") {
             return (
               <TableCell
@@ -156,7 +158,7 @@ function EnhancedTableToolbar(props) {
       )}
       {numSelected > 0 ? (
         <>
-          <Tooltip title="Accept">
+          <Tooltip title="Approve">
             <IconButton size="medium" color="success">
               <CheckIcon />
             </IconButton>
@@ -183,7 +185,16 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
+export default function AdvancedPermissionTable({
+  data,
+  showMoreData,
+  headCells = [],
+  showToolBar = true,
+  showDensePadding = true,
+  HandlePermissions = () => {},
+  permissions = [],
+  acceptPermissionsAsBulk = () => {},
+}) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
   const [order, setOrder] = React.useState("asc");
@@ -211,9 +222,11 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
+      acceptPermissionsAsBulk({});
       return;
     }
     setSelected([]);
+    acceptPermissionsAsBulk({ currentRow: null, checked: false });
   };
 
   const handleClick = (event, id) => {
@@ -234,6 +247,11 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
     }
 
     setSelected(newSelected);
+
+    acceptPermissionsAsBulk({
+      currentRow: [{ id }],
+      checked: event.target.checked,
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -261,17 +279,21 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
     [order, orderBy, page, rowsPerPage]
   );
 
+  console.log("selected ::: ", selected);
+
   return (
     <div className="custom-table">
       <Filter open={showFilter} close={closeFilter} />
 
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            openFilter={openFilter}
-            selected={selected}
-          />
+          {showToolBar && (
+            <EnhancedTableToolbar
+              numSelected={selected.length}
+              openFilter={openFilter}
+              selected={selected}
+            />
+          )}
           <TableContainer sx={{ maxHeight: "400px" }}>
             <Table
               sx={{ minWidth: 750 }}
@@ -290,7 +312,6 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
               <TableBody>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = selected.includes(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
@@ -307,15 +328,14 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
                           return (
                             <React.Fragment key={index}>
                               <TableCell padding="checkbox">
-                                <Checkbox
-                                  color="primary"
+                                <input
+                                  className="permission-box"
+                                  type="checkbox"
                                   checked={isItemSelected}
-                                  inputProps={{
-                                    "aria-labelledby": labelId,
-                                  }}
                                   onClick={(event) =>
                                     handleClick(event, row.id)
                                   }
+                                  style={{ float: "right" }}
                                 />
                               </TableCell>
                             </React.Fragment>
@@ -329,6 +349,49 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
                             </React.Fragment>
                           );
                         } else {
+                          // type of input to be displayed
+                          const { Component = false, checked = false } =
+                            row[headCell.id];
+
+                          if (Component) {
+                            return (
+                              <React.Fragment key={index}>
+                                <TableCell>
+                                  <Component
+                                    value={headCell.id}
+                                    name={headCell.id}
+                                    checked={permissions.find(
+                                      ({ row: Row, checked, value }) => {
+                                        return (
+                                          Row == row.id &&
+                                          value == headCell.id &&
+                                          checked
+                                        );
+                                      }
+                                    )}
+                                    onClick={(event) => {
+                                      HandlePermissions({
+                                        event,
+                                        row: row.id,
+                                      });
+
+                                      const sel = [...selected];
+                                      const find = sel.findIndex(
+                                        (d) => d === row.id
+                                      );
+                                      if (!event.target.checked) {
+                                        if (find !== -1) {
+                                          sel.splice(find, 1);
+                                          setSelected(sel);
+                                        }
+                                      }
+                                    }}
+                                  />
+                                </TableCell>
+                              </React.Fragment>
+                            );
+                          }
+
                           return (
                             <React.Fragment key={index}>
                               <TableCell>{row[headCell.id]}</TableCell>
@@ -361,10 +424,12 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        />
+        {showDensePadding && (
+          <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+          />
+        )}
       </Box>
     </div>
   );

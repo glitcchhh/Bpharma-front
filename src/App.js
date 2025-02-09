@@ -1,27 +1,18 @@
 // src/App.js
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import Header from "./components/header";
-import Sidebar from "./components/sidebar";
-// import UserManagement from "./pages/UserManagement/userManagement";
-// import DistributorManagement from "./pages/UserManagement/Distributor";
-// import Dashboard from "./pages/Dashboard";
-// import Login from "./pages/Login";
-// import Claim from "./pages/Product/claim";
-// import Offer from "./pages/Product/offer";
-// import Expiry from "./pages/Product/Expiry";
-// import "./assets/scss/custom.scss";
-// import NearExpiry from "./pages/Product/NearExpiry";
-// import Compliments from "./pages/Product/Compliments";
+import "./assets/scss/custom.scss";
+
 import ResponsiveDrawer from "./components/SideBarNew";
 import { Box } from "@mui/material";
-import AuthProvider from "./contexts/AuthProvider";
-// import Logout from "./pages/Logout";
+import AuthProvider, { useAuth } from "./contexts/AuthProvider";
 
 const Sample = React.lazy(() => import("./pages/Product/Sample"));
 const UserManagement = React.lazy(() =>
@@ -30,6 +21,9 @@ const UserManagement = React.lazy(() =>
 const DistributorManagement = React.lazy(() =>
   import("./pages/UserManagement/Distributor")
 );
+
+const Attach = React.lazy(() => import("./pages/UserManagement/Attach"));
+
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Claim = React.lazy(() => import("./pages/Product/claim"));
@@ -41,16 +35,23 @@ const Logout = React.lazy(() => import("./pages/Logout"));
 
 function Layout({ children }) {
   const location = useLocation();
+  const { token } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token]);
 
   // List of routes where you don't want to show the sidebar and header
   const noLayoutRoutes = ["/login"];
 
   // Check if the current route is in the noLayoutRoutes list
-  const showLayout = !noLayoutRoutes.includes(location.pathname);
+  const showLayout = !noLayoutRoutes.includes(location.pathname) && token;
 
   return (
     <div style={{ display: "flex" }}>
-      {/* {showLayout && <Sidebar />} */}
       {showLayout && <ResponsiveDrawer />}
       <div style={{ flex: 1, background: "#f1f1f2", overflow: "hidden" }}>
         {showLayout && <Header />}
@@ -95,6 +96,7 @@ function App() {
               <Route path="/product/sample" element={<Sample />} />
               <Route path="/product/near-expiry" element={<NearExpiry />} />
               <Route path="/product/compliments" element={<Compliments />} />
+              <Route path="/management/attach" element={<Attach />} />
               {/* Add more routes here */}
             </Routes>
           </Suspense>

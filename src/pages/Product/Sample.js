@@ -9,7 +9,6 @@ import AdvancedTable from "../../components/AdvancedTable";
 //   generateSampleData,
 //   generateSampleDataForTable,
 // } from "../../constants/DummyData";
-import "../../assets/scss/custom.scss";
 
 // make sure data passed to table have same id as modalTableHeadCells passed to its table
 const modalTableHeadCells = [

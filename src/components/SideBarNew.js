@@ -97,6 +97,7 @@ function ResponsiveDrawer(props) {
         { label: "User", path: "/management/user" },
         { label: "Distributor", path: "/management/distributor" },
         { label: "Territory", path: "/management/territory" },
+        { label: "Attach", path: "/management/attach" },
       ],
     },
   ];
