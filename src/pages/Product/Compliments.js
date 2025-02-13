@@ -10,10 +10,8 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { red } from "@mui/material/colors";
-import Modal from "../../components/Modal";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import AddNewUser from "../../components/AddNewUser";
 
 // Sample offer data
 const data = [
@@ -55,15 +53,45 @@ const modalData = [
   },
 ];
 
+const AddNewUserData = [
+  {
+    name: "user-code",
+    label: "User Code",
+  },
+  {
+    name: "name",
+    label: "User Name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+  },
+];
+
 function Compliments() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Modal open={open} close={() => setOpen(false)} data={modalData} />
-
       <>
         <h2>Product Expiry</h2>
+
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Compliments"
+          buttonLabel="New Compliments"
+        />
 
         {/* Offer Table */}
         <TableContainer component={Paper}>

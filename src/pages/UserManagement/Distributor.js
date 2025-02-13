@@ -3,8 +3,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useAuth } from "../../contexts/AuthProvider";
-import Modal from "../../components/Modal";
 import AdvancedTable from "../../components/AdvancedTable";
+import AddNewUser from "../../components/AddNewUser";
+import TableModal from "../../components/TableModal";
 
 const modalTableHeadCells = [
   {
@@ -85,8 +86,35 @@ const headCells = [
   },
 ];
 
+const AddNewUserData = [
+  {
+    name: "user-code",
+    label: "User Code",
+  },
+  {
+    name: "name",
+    label: "User Name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+  },
+];
+
 function DistributorManagementModal() {
   const [open, setOpen] = useState(false);
+
   const [data, setData] = useState([]);
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
@@ -141,15 +169,23 @@ function DistributorManagementModal() {
 
   return (
     <>
-      <Modal
+      <TableModal
         open={open}
         close={closeModal}
         data={data}
         modalTableHeadCells={modalTableHeadCells}
       />
+
+      <h2>Distributor Management</h2>
+
+      <AddNewUser
+        data={AddNewUserData}
+        title="Add New Distributor"
+        buttonLabel="New Distributor"
+      />
+
       {!isLoading && (
         <>
-          <h2>Product Sample</h2>
           {!data.length && <p>No Data Available</p>}
           {!!data.length && (
             <AdvancedTable
@@ -157,6 +193,8 @@ function DistributorManagementModal() {
               showMoreData={openModal}
               headCells={headCells}
               deleteAction={true}
+              acceptAction={false}
+              rejectAction={false}
             />
           )}
         </>

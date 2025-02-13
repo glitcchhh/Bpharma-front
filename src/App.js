@@ -26,23 +26,28 @@ const Attach = React.lazy(() => import("./pages/UserManagement/Attach"));
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Login = React.lazy(() => import("./pages/Login"));
+const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
 const Claim = React.lazy(() => import("./pages/Product/claim"));
 const Offer = React.lazy(() => import("./pages/Product/offer"));
 const Expiry = React.lazy(() => import("./pages/Product/Expiry"));
 const NearExpiry = React.lazy(() => import("./pages/Product/NearExpiry"));
 const Compliments = React.lazy(() => import("./pages/Product/Compliments"));
-const Logout = React.lazy(() => import("./pages/Logout"));
+const SignUp = React.lazy(() => import("./pages/SignUp"));
 
 function Layout({ children }) {
   const location = useLocation();
   const { token } = useAuth();
   const navigate = useNavigate();
 
+  const { pathname: currentPath } = location;
+
   useEffect(() => {
     if (!token) {
+      if (currentPath == "/forgot-password") return;
+      if (currentPath == "/sign-up") return;
       navigate("/login");
     }
-  }, [token]);
+  }, [token, currentPath]);
 
   // List of routes where you don't want to show the sidebar and header
   const noLayoutRoutes = ["/login"];
@@ -83,7 +88,8 @@ function App() {
           <Suspense fallback={"loading ...."}>
             <Routes>
               <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<Logout />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/management/user" element={<UserManagement />} />
               <Route

@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../contexts/AuthProvider";
 import { useLogin } from "../hooks/useLogin";
 
-const names = ["emp_code", "user_password"];
+const names = ["emp_code", "user_password", "phone"];
 
-export default function Login() {
+export default function SignUp() {
   const { setUser, setToken } = useAuth();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -205,6 +205,20 @@ export default function Login() {
               error={!!passwordError?.field}
               helperText={passwordError?.message}
             />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name={names[2]}
+              label="phone"
+              type={"tel"}
+              id={names[2]}
+              autoComplete={names[2]}
+              error={!!passwordError?.field}
+              helperText={passwordError?.message}
+            />
+
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -215,7 +229,7 @@ export default function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid
               container
@@ -253,7 +267,7 @@ export default function Login() {
                 }}
               >
                 <Link
-                  href="/sign-up"
+                  href="/login"
                   variant="body2"
                   sx={{
                     float: {
@@ -264,7 +278,7 @@ export default function Login() {
                     },
                   }}
                 >
-                  Don't have an account? Sign Up
+                  Already have an account? Login
                 </Link>
               </Grid>
             </Grid>

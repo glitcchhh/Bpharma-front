@@ -32,7 +32,7 @@ const style = {
   borderRadius: "10px",
 };
 
-export default function BasicModal({
+export default function TableModal({
   open,
   close,
   data,

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { red } from "@mui/material/colors";
+import AddNewUser from "../../components/AddNewUser";
 
 // Sample offer data
 const offers = [
@@ -41,10 +42,42 @@ const offers = [
   },
 ];
 
+const AddNewUserData = [
+  {
+    name: "user-code",
+    label: "User Code",
+  },
+  {
+    name: "name",
+    label: "User Name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+  },
+];
+
 function Offer() {
   return (
     <>
       <h2>Product Offer</h2>
+
+      <AddNewUser
+        data={AddNewUserData}
+        title="Add New Offer"
+        buttonLabel="New Offer"
+      />
 
       {/* Offer Table */}
       <TableContainer component={Paper}>

@@ -129,7 +129,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, openFilter, selected } = props;
+  const { numSelected, openFilter, selected, tableHeading } = props;
 
   return (
     <Toolbar
@@ -163,7 +163,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Sample
+          {tableHeading}
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -204,6 +204,7 @@ export default function AdvancedPermissionTable({
   HandlePermissions = () => {},
   permissions = [],
   acceptPermissionsAsBulk = () => {},
+  tableHeading = "Available data",
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -289,8 +290,6 @@ export default function AdvancedPermissionTable({
     [order, orderBy, page, rowsPerPage]
   );
 
-  console.log("selected ::: ", selected);
-
   return (
     <div className="custom-table">
       <Filter open={showFilter} close={closeFilter} />
@@ -302,6 +301,7 @@ export default function AdvancedPermissionTable({
               numSelected={selected.length}
               openFilter={openFilter}
               selected={selected}
+              tableHeading={tableHeading}
             />
           )}
           <TableContainer sx={{ maxHeight: "400px" }}>
@@ -361,7 +361,6 @@ export default function AdvancedPermissionTable({
                             </React.Fragment>
                           );
                         } else {
-                          // type of input to be displayed
                           const { Component = false, checked = false } =
                             row[headCell.id];
 

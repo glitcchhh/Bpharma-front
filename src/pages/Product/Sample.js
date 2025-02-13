@@ -1,10 +1,11 @@
 // src/pages/Product/offer.js
 import React, { useCallback, useEffect, useState } from "react";
-import Modal from "../../components/Modal";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
+import AddNewUser from "../../components/AddNewUser";
+import TableModal from "../../components/TableModal";
 // import {
 //   generateSampleData,
 //   generateSampleDataForTable,
@@ -70,6 +71,32 @@ const headCells = [
   },
 ];
 
+const AddNewUserData = [
+  {
+    name: "user-code",
+    label: "User Code",
+  },
+  {
+    name: "name",
+    label: "User Name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+  },
+];
+
 function Sample() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -124,15 +151,23 @@ function Sample() {
 
   return (
     <>
-      <Modal
+      <TableModal
         open={open}
         close={closeModal}
         data={data}
         modalTableHeadCells={modalTableHeadCells}
       />
+
+      <h2>Product Sample</h2>
+
+      <AddNewUser
+        data={AddNewUserData}
+        title="Add New Sample"
+        buttonLabel="New Sample"
+      />
+
       {!isLoading && (
         <>
-          <h2>Product Sample</h2>
           {!data.length && <p>No Data Available</p>}
           {!!data.length && (
             <AdvancedTable

@@ -1,21 +1,13 @@
 // src/pages/Product/offer.js
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import Modal from "../../components/Modal";
+
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import AdvancedTable from "../../components/AdvancedTable";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
+import AddNewUser from "../../components/AddNewUser";
+import TableModal from "../../components/TableModal";
 
 const modalTableHeadCells = [
   {
@@ -86,6 +78,32 @@ const headCells = [
   },
 ];
 
+const AddNewUserData = [
+  {
+    name: "user-code",
+    label: "User Code",
+  },
+  {
+    name: "name",
+    label: "User Name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+  },
+];
+
 function NearExpiry() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -141,15 +159,23 @@ function NearExpiry() {
 
   return (
     <>
-      <Modal
+      <TableModal
         open={open}
         close={closeModal}
         data={data}
         modalTableHeadCells={modalTableHeadCells}
       />
+
+      <h2>Product Sample</h2>
+
+      <AddNewUser
+        data={AddNewUserData}
+        title="Add New Near Expiry"
+        buttonLabel="New Near Expiry"
+      />
+
       {!isLoading && (
         <>
-          <h2>Product Sample</h2>
           {!data.length && <p>No Data Available</p>}
           {!!data.length && (
             <AdvancedTable

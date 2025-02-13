@@ -133,8 +133,11 @@ function EnhancedTableToolbar(props) {
     numSelected,
     openFilter,
     selected,
-    deleteAction = true,
+    deleteAction = false,
+    acceptAction = true,
+    rejectAction = true,
     handleDeleteClick = () => {},
+    tableHeading,
   } = props;
 
   return (
@@ -169,22 +172,26 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Sample
+          {tableHeading}
         </Typography>
       )}
       {numSelected > 0 ? (
         <>
-          <Tooltip title="Accept">
-            <IconButton size="medium" color="success">
-              <CheckIcon />
-            </IconButton>
-          </Tooltip>
+          {acceptAction && (
+            <Tooltip title="Accept">
+              <IconButton size="medium" color="success">
+                <CheckIcon />
+              </IconButton>
+            </Tooltip>
+          )}
 
-          <Tooltip title="Reject">
-            <IconButton size="medium" color="error">
-              <ClearIcon />
-            </IconButton>
-          </Tooltip>
+          {rejectAction && (
+            <Tooltip title="Reject">
+              <IconButton size="medium" color="error">
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          )}
 
           {deleteAction && (
             <Tooltip title="Delete">
@@ -216,7 +223,10 @@ export default function AdvancedTable({
   data,
   showMoreData,
   headCells = [],
-  deleteAction = false,
+  deleteAction,
+  acceptAction,
+  rejectAction,
+  tableHeading = "Available data",
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -338,7 +348,10 @@ export default function AdvancedTable({
             openFilter={openFilter}
             selected={selected}
             deleteAction={deleteAction}
+            acceptAction={acceptAction}
+            rejectAction={rejectAction}
             handleDeleteClick={handleDeleteClick}
+            tableHeading={tableHeading}
           />
           <TableContainer sx={{ maxHeight: "400px" }}>
             <Table
@@ -440,6 +453,43 @@ export default function AdvancedTable({
                                 <Tooltip title="view more">
                                   <IconButton size="medium">
                                     <MoreHorizIcon onClick={showMoreData} />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                            </React.Fragment>
+                          );
+                        } else if (headCell.id == "status") {
+                          const status = row[headCell.id];
+
+                          return (
+                            <React.Fragment key={index}>
+                              <TableCell>
+                                <Tooltip title={status ? "active" : "inactive"}>
+                                  <IconButton size="small">
+                                    <IconButton
+                                      size="small"
+                                      sx={{
+                                        backgroundColor: status
+                                          ? "green"
+                                          : "red",
+                                      }}
+                                    >
+                                      {status ? (
+                                        <CheckIcon
+                                          color="white"
+                                          sx={{
+                                            fill: "white",
+                                          }}
+                                        />
+                                      ) : (
+                                        <ClearIcon
+                                          color="white"
+                                          sx={{
+                                            fill: "white",
+                                          }}
+                                        />
+                                      )}
+                                    </IconButton>
                                   </IconButton>
                                 </Tooltip>
                               </TableCell>

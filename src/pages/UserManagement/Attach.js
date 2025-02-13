@@ -187,13 +187,13 @@ const Attach = () => {
             sx={{
               my: {
                 xs: "50px",
-                md: "20px",
+                sm: "20px",
               },
               display: "flex",
               justifyContent: "space-between",
               flexDirection: {
                 xs: "column",
-                md: "row",
+                sm: "row",
               },
             }}
           >
@@ -203,7 +203,7 @@ const Attach = () => {
                   minWidth: 180,
                   width: {
                     xs: "100%",
-                    md: 180,
+                    sm: 180,
                   },
                 }}
                 size="small"
@@ -221,17 +221,17 @@ const Attach = () => {
               <FormControl
                 sx={{
                   marginLeft: {
-                    md: "10px",
+                    sm: "10px",
                     xs: 0,
                   },
                   minWidth: 180,
                   width: {
                     xs: "100%",
-                    md: 180,
+                    sm: 180,
                   },
                   marginTop: {
                     xs: "10px",
-                    md: 0,
+                    sm: 0,
                   },
                 }}
                 size="small"
@@ -253,7 +253,7 @@ const Attach = () => {
                   textTransform: "capitalize",
                   marginTop: {
                     xs: "10px",
-                    md: 0,
+                    sm: 0,
                   },
                   float: {
                     xs: "right",
@@ -293,7 +293,7 @@ const Attach = () => {
                 textTransform: "capitalize",
                 width: {
                   xs: "100%",
-                  md: "fit-content",
+                  sm: "150px",
                 },
                 padding: "10px 15px",
               }}
@@ -309,7 +309,7 @@ const Attach = () => {
                 textTransform: "capitalize",
                 width: {
                   xs: "100%",
-                  md: "fit-content",
+                  sm: "150px",
                 },
                 padding: "10px 15px",
               }}

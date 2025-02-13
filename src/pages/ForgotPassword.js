@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../contexts/AuthProvider";
 import { useLogin } from "../hooks/useLogin";
 
-const names = ["emp_code", "user_password"];
+const names = ["emp_code"];
 
-export default function Login() {
+export default function ForgotPassword() {
   const { setUser, setToken } = useAuth();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ export default function Login() {
           }}
         >
           <img
-            src={`${process.env.PUBLIC_URL}/login.png`}
+            src={`${process.env.PUBLIC_URL}/forgot-password.png`}
             alt="Login"
             style={{
               width: "100%",
@@ -193,29 +193,14 @@ export default function Login() {
               error={!!mailError?.field}
               helperText={mailError?.message}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name={names[1]}
-              label="password"
-              type={"password"}
-              id={names[1]}
-              autoComplete={names[1]}
-              error={!!passwordError?.field}
-              helperText={passwordError?.message}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
-              type="submit" // This button triggers the form submit event
+              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Submit
             </Button>
             <Grid
               container
@@ -238,8 +223,8 @@ export default function Login() {
                 }}
                 marginTop="5px"
               >
-                <Link href="/forgot-password" variant="body2">
-                  Forgot your password?
+                <Link href="/login" variant="body2">
+                  Back to login
                 </Link>
               </Grid>
               <Grid
