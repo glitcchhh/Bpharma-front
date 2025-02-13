@@ -106,6 +106,9 @@ export default function Login() {
         component={Paper}
         elevation={6}
         square
+        sx={{
+          boxShadow: "none",
+        }}
       >
         <Box
           sx={{

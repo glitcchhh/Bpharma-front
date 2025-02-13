@@ -1,124 +1,121 @@
 // src/pages/Product/claim.js
-import React, { useState } from "react";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useAuth } from "../../contexts/AuthProvider";
+import { useDataIngestion } from "../../hooks/useDataIngestion";
+import { useNavigate } from "react-router-dom";
+import AdvancedTable from "../../components/AdvancedTable";
 
-// Sample Claim data
-const claims = [
+const modalTableHeadCells = [
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "id",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "employee_name",
+    disablePadding: false,
+    label: "Employee Code",
   },
   {
-    name: "Sam",
-    product: "A-1",
-    free_quantity: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "distributor_name",
+    disablePadding: false,
+    label: "Product",
   },
 ];
 
-const modalData = [
+// make sure data passed to table have same id as headCells passed to its table
+const headCells = [
   {
-    name: "Name A",
-    product_name: "product 1",
-    quantity: "5",
-    remarks: "Text",
+    id: "id",
   },
   {
-    name: "Name B",
-    product_name: "product 2",
-    quantity: "5",
-    remarks: "Text",
+    id: "employee_name",
+    disablePadding: false,
+    label: "Employee Code",
   },
   {
-    name: "Name C",
-    product_name: "product 3",
-    quantity: "5",
-    remarks: "Text",
+    id: "distributor_name",
+    disablePadding: false,
+    label: "Product",
+  },
+  {
+    id: "more",
+    disablePadding: false,
+    label: "More",
+    notSortable: true,
   },
 ];
 
 function Claim() {
   const [open, setOpen] = useState(false);
-  // const [modalData, setModalData] = useState([]);
+  const [data, setData] = useState([]);
   const { token } = useAuth();
+  const { saveDataIngestion, isLoading } = useDataIngestion();
+  const navigate = useNavigate();
 
-  console.log("token :: ", token);
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: `api/list-claim`,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const tableFormattedData = response.data.data.map((obj) => {
+        return {
+          id: obj.claim_id,
+          employee_name: obj.employee.display_name,
+          distributor_name: obj.distributor.distributor_name,
+        };
+      });
+
+      setData(tableFormattedData);
+      // setData([])
+      // setData(generateSampleDataForTable(10));
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchData();
+    } else {
+      navigate("/login");
+    }
+  }, [token]);
 
   return (
     <>
-      <Modal open={open} close={() => setOpen(false)} data={modalData} />
-
-      <>
-        <h2>Product Claim</h2>
-
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Product</TableCell>
-                <TableCell>Free Quantity</TableCell>
-                <TableCell>Total Quantity</TableCell>
-                <TableCell>Remarks</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>More Info</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {claims.map((claim, index) => (
-                <TableRow key={index}>
-                  <TableCell>{claim.name}</TableCell>
-                  <TableCell>{claim.product}</TableCell>
-                  <TableCell>{claim.free_quantity}</TableCell>
-                  <TableCell>{claim.total_quantity}</TableCell>
-                  <TableCell>{claim.remarks}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="success" size="small">
-                      ✓
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      style={{ marginLeft: "10px" }}
-                    >
-                      ✕
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <a onClick={() => setOpen(true)} className="cursor-pointer">
-                      <ErrorOutlineIcon />
-                    </a>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
+      <Modal
+        open={open}
+        close={closeModal}
+        data={data}
+        modalTableHeadCells={modalTableHeadCells}
+      />
+      {!isLoading && (
+        <>
+          <h2>Product Sample</h2>
+          {!data.length && <p>No Data Available</p>}
+          {!!data.length && (
+            <AdvancedTable
+              data={data}
+              showMoreData={openModal}
+              headCells={headCells}
+            />
+          )}
+        </>
+      )}
     </>
   );
 }

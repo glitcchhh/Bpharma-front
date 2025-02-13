@@ -23,7 +23,19 @@ import ClearIcon from "@mui/icons-material/Clear";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Filter from "./Filter";
+import { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -117,7 +129,13 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, openFilter, selected } = props;
+  const {
+    numSelected,
+    openFilter,
+    selected,
+    deleteAction = true,
+    handleDeleteClick = () => {},
+  } = props;
 
   return (
     <Toolbar
@@ -167,6 +185,17 @@ function EnhancedTableToolbar(props) {
               <ClearIcon />
             </IconButton>
           </Tooltip>
+
+          {deleteAction && (
+            <Tooltip title="Delete">
+              <IconButton
+                size="medium"
+                onClick={() => handleDeleteClick(numSelected)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </>
       ) : (
         <Tooltip title="Filter list">
@@ -183,7 +212,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
+export default function AdvancedTable({
+  data,
+  showMoreData,
+  headCells = [],
+  deleteAction = false,
+}) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
   const [order, setOrder] = React.useState("asc");
@@ -192,6 +226,38 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [editingIdx, setEditingIdx] = useState(null);
+  const [editValues, setEditValues] = useState({});
+  const [deleteIdx, setDeleteIdx] = useState(null);
+  const [openDeletePopOver, setOpenDeletePopOver] = useState(false);
+
+  const startEditing = (index, row) => {
+    console.log("start editing :: ", index, row);
+
+    setEditingIdx(index);
+    setEditValues(row);
+  };
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditValues((prev) => ({ ...prev, [name]: value }));
+  };
+  const saveEdit = () => {
+    console.log("Save", editValues);
+    setEditingIdx(null);
+  };
+
+  const handleDeleteClick = (index) => {
+    setDeleteIdx(index);
+    setOpenDeletePopOver(true);
+  };
+  const handleDeleteConfirm = () => {
+    setOpenDeletePopOver(false);
+    setDeleteIdx(null);
+  };
+  const handleDeleteCancel = () => {
+    setOpenDeletePopOver(false);
+    setDeleteIdx(null);
+  };
 
   const openFilter = () => {
     setShowFilter(true);
@@ -271,6 +337,8 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
             numSelected={selected.length}
             openFilter={openFilter}
             selected={selected}
+            deleteAction={deleteAction}
+            handleDeleteClick={handleDeleteClick}
           />
           <TableContainer sx={{ maxHeight: "400px" }}>
             <Table
@@ -288,9 +356,9 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
                 headCells={headCells}
               />
               <TableBody>
-                {visibleRows.map((row, index) => {
+                {visibleRows.map((row, i) => {
                   const isItemSelected = selected.includes(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const labelId = `enhanced-table-checkbox-${i}`;
 
                   return (
                     <TableRow
@@ -320,16 +388,76 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
                               </TableCell>
                             </React.Fragment>
                           );
+                        } else if (headCell.id == "edit") {
+                          return editingIdx == i ? (
+                            <React.Fragment key={index}>
+                              <TableCell>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                  }}
+                                >
+                                  <Tooltip title="Save">
+                                    <IconButton
+                                      size="medium"
+                                      color="success"
+                                      onClick={saveEdit}
+                                    >
+                                      <CheckIcon />
+                                    </IconButton>
+                                  </Tooltip>
+
+                                  <Tooltip title="Cancel">
+                                    <IconButton
+                                      size="medium"
+                                      color="error"
+                                      onClick={() => setEditingIdx(null)}
+                                    >
+                                      <ClearIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Box>
+                              </TableCell>
+                            </React.Fragment>
+                          ) : (
+                            <React.Fragment key={index}>
+                              <TableCell>
+                                <Tooltip title="edit">
+                                  <IconButton
+                                    size="medium"
+                                    onClick={() => startEditing(i, row)}
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                            </React.Fragment>
+                          );
                         } else if (headCell.id == "more") {
                           return (
                             <React.Fragment key={index}>
                               <TableCell>
-                                <MoreHorizIcon onClick={showMoreData} />
+                                <Tooltip title="view more">
+                                  <IconButton size="medium">
+                                    <MoreHorizIcon onClick={showMoreData} />
+                                  </IconButton>
+                                </Tooltip>
                               </TableCell>
                             </React.Fragment>
                           );
                         } else {
-                          return (
+                          return editingIdx === i ? (
+                            <React.Fragment key={index}>
+                              <TableCell>
+                                <TextField
+                                  name={headCell.id}
+                                  value={editValues[headCell.id]}
+                                  onChange={handleEditChange}
+                                  size="small"
+                                />
+                              </TableCell>
+                            </React.Fragment>
+                          ) : (
                             <React.Fragment key={index}>
                               <TableCell>{row[headCell.id]}</TableCell>
                             </React.Fragment>
@@ -366,6 +494,28 @@ export default function AdvancedTable({ data, showMoreData, headCells = [] }) {
           label="Dense padding"
         />
       </Box>
+
+      <Dialog
+        open={openDeletePopOver}
+        onClose={handleDeleteCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Deletion"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this entry?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

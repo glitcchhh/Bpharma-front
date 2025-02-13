@@ -23,6 +23,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Filter from "../../../components/Filter";
+import { Checkbox } from "@mui/material";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,12 +62,21 @@ function EnhancedTableHead(props) {
           if (headCell.id == "id") {
             return (
               <TableCell padding="checkbox">
-                <input
+                {/* <input
                   className="permission-box"
                   type="checkbox"
                   checked={rowCount > 0 && numSelected === rowCount}
                   onChange={onSelectAllClick}
                   style={{ float: "right" }}
+                /> */}
+                <Checkbox
+                  color="primary"
+                  indeterminate={numSelected > 0 && numSelected < rowCount}
+                  checked={rowCount > 0 && numSelected === rowCount}
+                  onChange={onSelectAllClick}
+                  inputProps={{
+                    "aria-label": "select all desserts",
+                  }}
                 />
               </TableCell>
             );
@@ -310,8 +320,9 @@ export default function AdvancedPermissionTable({
                 headCells={headCells}
               />
               <TableBody>
-                {visibleRows.map((row, index) => {
+                {visibleRows.map((row, i) => {
                   const isItemSelected = selected.includes(row.id);
+                  const labelId = `enhanced-table-checkbox-${i}`;
 
                   return (
                     <TableRow
@@ -328,14 +339,15 @@ export default function AdvancedPermissionTable({
                           return (
                             <React.Fragment key={index}>
                               <TableCell padding="checkbox">
-                                <input
-                                  className="permission-box"
-                                  type="checkbox"
+                                <Checkbox
+                                  color="primary"
                                   checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": labelId,
+                                  }}
                                   onClick={(event) =>
                                     handleClick(event, row.id)
                                   }
-                                  style={{ float: "right" }}
                                 />
                               </TableCell>
                             </React.Fragment>

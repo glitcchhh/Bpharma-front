@@ -1,5 +1,5 @@
 // src/pages/Product/offer.js
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Table,
@@ -10,103 +10,156 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { red } from "@mui/material/colors";
 import Modal from "../../components/Modal";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { useDataIngestion } from "../../hooks/useDataIngestion";
+import AdvancedTable from "../../components/AdvancedTable";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthProvider";
 
-// Sample offer data
-const data = [
+const modalTableHeadCells = [
   {
-    distributer: "kochi",
-    amount: "5",
-    remarks: "Text",
+    id: "id",
   },
   {
-    distributer: "kochi",
-    amount: "5",
-    remarks: "Text",
+    id: "employee",
+    disablePadding: false,
+    label: "Employee",
   },
   {
-    distributer: "kochi",
-    amount: "5",
-    remarks: "Text",
+    id: "product_name",
+    disablePadding: false,
+    label: "Product",
+  },
+  {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+  {
+    id: "quantity",
+    disablePadding: false,
+    label: "Quantity",
+  },
+  {
+    id: "remarks",
+    disablePadding: false,
+    label: "Remarks",
   },
 ];
 
-const modalData = [
+// make sure data passed to table have same id as headCells passed to its table
+const headCells = [
   {
-    name: "Name A",
-    product_name: "product 1",
-    quantity: "5",
-    remarks: "Text",
+    id: "id",
   },
   {
-    name: "Name B",
-    product_name: "product 2",
-    quantity: "5",
-    remarks: "Text",
+    id: "employee",
+    disablePadding: false,
+    label: "Employee",
   },
   {
-    name: "Name C",
-    product_name: "product 3",
-    quantity: "5",
-    remarks: "Text",
+    id: "product_name",
+    disablePadding: false,
+    label: "Product",
+  },
+  {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+  {
+    id: "quantity",
+    disablePadding: false,
+    label: "Quantity",
+  },
+  {
+    id: "remarks",
+    disablePadding: false,
+    label: "Remarks",
+  },
+  {
+    id: "more",
+    disablePadding: false,
+    label: "More",
+    notSortable: true,
   },
 ];
 
 function Expiry() {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const { token } = useAuth();
+  const { saveDataIngestion, isLoading } = useDataIngestion();
+  const navigate = useNavigate();
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: `api/list-expiry`,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const tableFormattedData = response.data.data.map((obj) => {
+        return {
+          id: obj.expairy_req_id,
+          employee: obj.employee.display_name,
+          product_name: obj.product.product_name,
+          customer_name: obj.customer_name,
+          quantity: obj.total_qty,
+          remarks: obj.remarks,
+        };
+      });
+
+      setData(tableFormattedData);
+      // setData([])
+      // setData(generateSampleDataForTable(10));
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchData();
+    } else {
+      navigate("/login");
+    }
+  }, [token]);
 
   return (
     <>
-      <Modal open={open} close={() => setOpen(false)} data={modalData} />
-
-      <>
-        <h2>Product Expiry</h2>
-
-        {/* Offer Table */}
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
-              <TableRow>
-                <TableCell>Distributer</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Remarks</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>More Info</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((offer, index) => (
-                <TableRow key={index}>
-                  <TableCell>{offer.distributer}</TableCell>
-                  <TableCell>{offer.amount}</TableCell>
-                  <TableCell>{offer.remarks}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="success" size="small">
-                      ✓
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      style={{ marginLeft: "10px" }}
-                    >
-                      ✕
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <a onClick={() => setOpen(true)} className="cursor-pointer">
-                      <ErrorOutlineIcon />
-                    </a>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
+      <Modal
+        open={open}
+        close={closeModal}
+        data={data}
+        modalTableHeadCells={modalTableHeadCells}
+      />
+      {!isLoading && (
+        <>
+          <h2>Product Sample</h2>
+          {!data.length && <p>No Data Available</p>}
+          {!!data.length && (
+            <AdvancedTable
+              data={data}
+              showMoreData={openModal}
+              headCells={headCells}
+            />
+          )}
+        </>
+      )}
     </>
   );
 }

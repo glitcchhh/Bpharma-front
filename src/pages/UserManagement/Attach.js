@@ -185,13 +185,29 @@ const Attach = () => {
 
           <Box
             sx={{
-              my: "20px",
+              my: {
+                xs: "50px",
+                md: "20px",
+              },
               display: "flex",
               justifyContent: "space-between",
+              flexDirection: {
+                xs: "column",
+                md: "row",
+              },
             }}
           >
             <div>
-              <FormControl sx={{ minWidth: 180 }} size="small">
+              <FormControl
+                sx={{
+                  minWidth: 180,
+                  width: {
+                    xs: "100%",
+                    md: 180,
+                  },
+                }}
+                size="small"
+              >
                 <InputLabel id="demo-simple-select-label">User role</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -203,7 +219,21 @@ const Attach = () => {
               </FormControl>
 
               <FormControl
-                sx={{ marginLeft: "10px", minWidth: 180 }}
+                sx={{
+                  marginLeft: {
+                    md: "10px",
+                    xs: 0,
+                  },
+                  minWidth: 180,
+                  width: {
+                    xs: "100%",
+                    md: 180,
+                  },
+                  marginTop: {
+                    xs: "10px",
+                    md: 0,
+                  },
+                }}
                 size="small"
               >
                 <InputLabel id="demo-simple-select-label">Module</InputLabel>
@@ -220,8 +250,17 @@ const Attach = () => {
               <Button
                 sx={{
                   display: "block",
-
                   textTransform: "capitalize",
+                  marginTop: {
+                    xs: "10px",
+                    md: 0,
+                  },
+                  float: {
+                    xs: "right",
+                  },
+                  width: {
+                    xs: "100%",
+                  },
                 }}
                 variant="contained"
               >
@@ -244,10 +283,6 @@ const Attach = () => {
             sx={{
               mt: "20px",
               display: "flex",
-              flexDirection: {
-                sm: "column",
-                md: "row",
-              },
               justifyContent: "center",
             }}
           >
@@ -256,6 +291,11 @@ const Attach = () => {
                 display: "block",
                 backgroundColor: "darkgreen",
                 textTransform: "capitalize",
+                width: {
+                  xs: "100%",
+                  md: "fit-content",
+                },
+                padding: "10px 15px",
               }}
               variant="contained"
             >
@@ -264,11 +304,14 @@ const Attach = () => {
             <Button
               sx={{
                 display: "block",
-                marginLeft: {
-                  sm: "15px",
-                },
+                marginLeft: "15px",
                 backgroundColor: "red",
                 textTransform: "capitalize",
+                width: {
+                  xs: "100%",
+                  md: "fit-content",
+                },
+                padding: "10px 15px",
               }}
               variant="contained"
             >
