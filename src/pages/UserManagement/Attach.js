@@ -181,8 +181,6 @@ const Attach = () => {
     <>
       {!isLoading && (
         <>
-          <h2>Attach</h2>
-
           <Box
             sx={{
               my: {

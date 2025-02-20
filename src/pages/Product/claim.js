@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 const modalTableHeadCells = [
   {
@@ -80,6 +81,12 @@ function Claim() {
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
 
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
+
   const openModal = () => {
     setOpen(true);
   };
@@ -131,13 +138,14 @@ function Claim() {
         data={data}
         modalTableHeadCells={modalTableHeadCells}
       />
-      <h2>Product Claim</h2>
 
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Claim"
-        buttonLabel="New Claim"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Claim"
+          buttonLabel="New Claim"
+        />
+      )}
 
       {!isLoading && (
         <>

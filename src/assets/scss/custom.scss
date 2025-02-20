@@ -2,6 +2,14 @@
   cursor: pointer;
 }
 
+.css-10cbwbc-MuiTableRow-root.Mui-selected {
+  background-color: white !important;
+}
+
+.css-10cbwbc-MuiTableRow-root.MuiTableRow-hover:hover {
+  background-color: white !important;
+}
+
 .custom-modal {
   .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
     background-color: rgba(0, 0, 0, 0.9);

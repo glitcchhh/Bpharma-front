@@ -19,7 +19,11 @@ export const useLogin = () => {
     } catch (error) {
       console.log({ error });
       setLoading(false);
-      throw error;
+      return {
+        data: {
+          status: "failed",
+        },
+      };
     }
 
     setLoading(false);

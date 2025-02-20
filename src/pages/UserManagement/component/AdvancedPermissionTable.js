@@ -61,7 +61,14 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => {
           if (headCell.id == "id") {
             return (
-              <TableCell padding="checkbox">
+              <TableCell
+                padding="checkbox"
+                sx={{
+                  fontWeight: 600,
+                  borderRadius: "5px 0 0 5px",
+                  borderBottom: "none",
+                }}
+              >
                 {/* <input
                   className="permission-box"
                   type="checkbox"
@@ -89,6 +96,13 @@ function EnhancedTableHead(props) {
                 align="left"
                 padding={headCell.disablePadding ? "none" : "normal"}
                 sortDirection={orderBy === headCell.id ? order : false}
+                sx={{
+                  fontWeight: 600,
+                  borderBottom: "none",
+                  ":last-child": {
+                    borderRadius: "0 5px 5px 0",
+                  },
+                }}
               >
                 <>
                   {headCell.notSortable ? (
@@ -138,13 +152,13 @@ function EnhancedTableToolbar(props) {
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
         },
-        numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        },
+        // numSelected > 0 && {
+        //   bgcolor: (theme) =>
+        //     alpha(
+        //       theme.palette.primary.main,
+        //       theme.palette.action.activatedOpacity
+        //     ),
+        // },
       ]}
     >
       {numSelected > 0 ? (
@@ -159,7 +173,7 @@ function EnhancedTableToolbar(props) {
       ) : (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          variant="h6"
+          variant="subtitle1"
           id="tableTitle"
           component="div"
         >
@@ -295,7 +309,7 @@ export default function AdvancedPermissionTable({
       <Filter open={showFilter} close={closeFilter} />
 
       <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
+        <Paper sx={{ width: "100%", boxShadow: "none" }}>
           {showToolBar && (
             <EnhancedTableToolbar
               numSelected={selected.length}
@@ -304,7 +318,7 @@ export default function AdvancedPermissionTable({
               tableHeading={tableHeading}
             />
           )}
-          <TableContainer sx={{ maxHeight: "400px" }}>
+          <TableContainer sx={{ maxHeight: "400px", borderRadius: "5px" }}>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"

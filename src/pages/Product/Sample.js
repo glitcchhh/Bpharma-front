@@ -2,10 +2,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
+import { getUserPermissions } from "../../constants/Constants";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 // import {
 //   generateSampleData,
 //   generateSampleDataForTable,
@@ -103,6 +105,11 @@ function Sample() {
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
 
   const openModal = () => {
     setOpen(true);
@@ -158,13 +165,13 @@ function Sample() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <h2>Product Sample</h2>
-
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Sample"
-        buttonLabel="New Sample"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Sample"
+          buttonLabel="New Sample"
+        />
+      )}
 
       {!isLoading && (
         <>

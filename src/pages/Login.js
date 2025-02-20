@@ -10,6 +10,7 @@ import {
   Paper,
   Box,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
@@ -23,17 +24,21 @@ export default function Login() {
   const { setUser, setToken } = useAuth();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { saveLogin } = useLogin();
+  const { saveLogin, loading } = useLogin();
 
   // when this page is loaded token must be cleared
   useEffect(() => {
     setToken("");
     sessionStorage.removeItem("site");
+    localStorage.removeItem("site");
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (loading) return;
+
     const data = new FormData(event.currentTarget);
+    const remember = data.get("remember-me");
 
     const loginData = {
       [names[0]]: data.get(names[0]),
@@ -44,13 +49,25 @@ export default function Login() {
       const response = await saveLogin(loginData);
       console.log({ response });
 
-      if (response.data.status !== "OK") return;
+      if (response.data.status !== "OK") {
+        return navigate("/error");
+      }
+
       const user = response.data.data.userData;
       const auth_token = response.data.data.auth_token;
 
+      user.user = "super-admin";
+
       setUser(user);
       setToken(auth_token);
-      sessionStorage.setItem("site", auth_token);
+
+      if (remember) {
+        localStorage.setItem("site", auth_token);
+      } else {
+        sessionStorage.setItem("site", auth_token);
+      }
+
+      localStorage.setItem("user", JSON.stringify(user));
 
       navigate("/dashboard");
       return;
@@ -97,7 +114,6 @@ export default function Login() {
           md: "block",
         }}
         size={6}
-        item
         sx={{
           position: "relative",
         }}
@@ -135,8 +151,6 @@ export default function Login() {
         </Box>
       </Grid>
       <Grid
-        item
-        square
         sx={{
           boxShadow: "none",
           display: "flex",
@@ -206,17 +220,33 @@ export default function Login() {
               helperText={passwordError?.message}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox name="remember-me" value={true} color="primary" />
+              }
               label="Remember me"
             />
             <Button
               type="submit" // This button triggers the form submit event
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, textTransform: "none" }}
             >
-              Sign In
+              {loading ? (
+                <>
+                  Please wait
+                  <CircularProgress
+                    size={14}
+                    sx={{
+                      color: "white",
+                      ml: 1,
+                    }}
+                  />
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
+
             <Grid
               container
               size={12}
@@ -226,7 +256,6 @@ export default function Login() {
               }}
             >
               <Grid
-                item
                 size={{
                   xs: 12,
                   sm: 4,
@@ -243,7 +272,6 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid
-                item
                 marginTop="5px"
                 size={{
                   xs: 12,

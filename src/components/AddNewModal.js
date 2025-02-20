@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   Dialog,
   DialogContent,
@@ -67,7 +67,7 @@ const AddNewUserModal = ({
         >
           {data.map(({ name, label, type = "text" }, index) => {
             return (
-              <>
+              <Fragment key={index}>
                 <TextField
                   key={index}
                   margin="dense"
@@ -79,7 +79,7 @@ const AddNewUserModal = ({
                   size="small"
                   name={name}
                 />
-              </>
+              </Fragment>
             );
           })}
           <Button type="submit" variant="contained" color="primary" fullWidth>

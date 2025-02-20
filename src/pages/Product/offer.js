@@ -1,44 +1,59 @@
-// src/pages/Product/offer.js
-import React, { useState } from "react";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { red } from "@mui/material/colors";
+// src/pages/Product/claim.js
+import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthProvider";
+import { useDataIngestion } from "../../hooks/useDataIngestion";
+import { useNavigate } from "react-router-dom";
+import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
+import TableModal from "../../components/TableModal";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
-// Sample offer data
-const offers = [
+const modalTableHeadCells = [
   {
-    customer: "ETC",
-    product: "A-1",
-    location: "kochi",
-    offer: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "id",
   },
   {
-    customer: "ETC",
-    product: "A-1",
-    location: "kochi",
-    offer: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "employee_name",
+    disablePadding: false,
+    label: "Employee Code",
   },
   {
-    customer: "ETC",
-    product: "A-1",
-    location: "kochi",
-    offer: "1",
-    total_quantity: "5",
-    remarks: "Text",
+    id: "product_name",
+    disablePadding: false,
+    label: "Product",
+  },
+  {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+];
+
+// make sure data passed to table have same id as headCells passed to its table
+const headCells = [
+  {
+    id: "id",
+  },
+  {
+    id: "employee_name",
+    disablePadding: false,
+    label: "Employee Code",
+  },
+  {
+    id: "product_name",
+    disablePadding: false,
+    label: "Product",
+  },
+  {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+  {
+    id: "more",
+    disablePadding: false,
+    label: "More",
+    notSortable: true,
   },
 ];
 
@@ -69,57 +84,92 @@ const AddNewUserData = [
 ];
 
 function Offer() {
+  const [open, setOpen] = useState(false);
+
+  const [data, setData] = useState([]);
+  const { token } = useAuth();
+  const { saveDataIngestion, isLoading } = useDataIngestion();
+  const navigate = useNavigate();
+
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: `api/list-offer`,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const tableFormattedData = response.data.data.map((obj) => {
+        return {
+          id: obj.offer_id,
+          employee_name: obj.employee.display_name,
+          product_name: obj.product.product_name,
+          customer_name: obj.customer_name,
+        };
+      });
+
+      setData(tableFormattedData);
+      // setData([])
+      // setData(generateSampleDataForTable(10));
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchData();
+    } else {
+      navigate("/login");
+    }
+  }, [token]);
+
   return (
     <>
-      <h2>Product Offer</h2>
-
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Offer"
-        buttonLabel="New Offer"
+      <TableModal
+        open={open}
+        close={closeModal}
+        data={data}
+        modalTableHeadCells={modalTableHeadCells}
       />
 
-      {/* Offer Table */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead sx={{ bgcolor: "#c9d1db", color: "#fff" }}>
-            <TableRow>
-              <TableCell>Product</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Offer</TableCell>
-              <TableCell>Remarks</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {offers.map((offer, index) => (
-              <TableRow key={index}>
-                <TableCell>{offer.product}</TableCell>
-                <TableCell>{offer.customer}</TableCell>
-                <TableCell>{offer.location}</TableCell>
-                <TableCell>{offer.total_quantity}</TableCell>
-                <TableCell>{offer.offer}</TableCell>
-                <TableCell>{offer.remarks}</TableCell>
-                <TableCell>
-                  <Button variant="contained" color="success" size="small">
-                    ✓
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    style={{ marginLeft: "10px" }}
-                  >
-                    ✕
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Claim"
+          buttonLabel="New Claim"
+        />
+      )}
+
+      {!isLoading && (
+        <>
+          {!data.length && <p>No Data Available</p>}
+          {!!data.length && (
+            <AdvancedTable
+              data={data}
+              showMoreData={openModal}
+              headCells={headCells}
+            />
+          )}
+        </>
+      )}
     </>
   );
 }

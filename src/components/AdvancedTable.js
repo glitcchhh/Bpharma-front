@@ -68,9 +68,20 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead sx={{ backgroundColor: "#5037f436" }}>
+    <TableHead
+      sx={{
+        backgroundColor: "#5037f436",
+      }}
+    >
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell
+          padding="checkbox"
+          sx={{
+            fontWeight: 600,
+            borderRadius: "5px 0 0 5px",
+            borderBottom: "none",
+          }}
+        >
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -89,6 +100,13 @@ function EnhancedTableHead(props) {
                 align="left"
                 padding={headCell.disablePadding ? "none" : "normal"}
                 sortDirection={orderBy === headCell.id ? order : false}
+                sx={{
+                  fontWeight: 600,
+                  borderBottom: "none",
+                  ":last-child": {
+                    borderRadius: "0 5px 5px 0",
+                  },
+                }}
               >
                 <>
                   {headCell.notSortable ? (
@@ -147,13 +165,13 @@ function EnhancedTableToolbar(props) {
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
         },
-        numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        },
+        // numSelected > 0 && {
+        //   bgcolor: (theme) =>
+        //     alpha(
+        //       theme.palette.primary.main,
+        //       theme.palette.action.activatedOpacity
+        //     ),
+        // },
       ]}
     >
       {numSelected > 0 ? (
@@ -168,7 +186,7 @@ function EnhancedTableToolbar(props) {
       ) : (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          variant="h6"
+          variant="subtitle1"
           id="tableTitle"
           component="div"
         >
@@ -342,7 +360,7 @@ export default function AdvancedTable({
       <Filter open={showFilter} close={closeFilter} />
 
       <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
+        <Paper sx={{ width: "100%", boxShadow: "none" }}>
           <EnhancedTableToolbar
             numSelected={selected.length}
             openFilter={openFilter}
@@ -353,7 +371,7 @@ export default function AdvancedTable({
             handleDeleteClick={handleDeleteClick}
             tableHeading={tableHeading}
           />
-          <TableContainer sx={{ maxHeight: "400px" }}>
+          <TableContainer sx={{ maxHeight: "400px", borderRadius: "5px" }}>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
@@ -451,8 +469,11 @@ export default function AdvancedTable({
                             <React.Fragment key={index}>
                               <TableCell>
                                 <Tooltip title="view more">
-                                  <IconButton size="medium">
-                                    <MoreHorizIcon onClick={showMoreData} />
+                                  <IconButton
+                                    size="medium"
+                                    onClick={showMoreData}
+                                  >
+                                    <MoreHorizIcon />
                                   </IconButton>
                                 </Tooltip>
                               </TableCell>
@@ -465,31 +486,34 @@ export default function AdvancedTable({
                             <React.Fragment key={index}>
                               <TableCell>
                                 <Tooltip title={status ? "active" : "inactive"}>
-                                  <IconButton size="small">
-                                    <IconButton
-                                      size="small"
-                                      sx={{
+                                  <IconButton
+                                    size="small"
+                                    sx={{
+                                      backgroundColor: status ? "green" : "red",
+                                      ":hover": {
                                         backgroundColor: status
                                           ? "green"
                                           : "red",
-                                      }}
-                                    >
-                                      {status ? (
-                                        <CheckIcon
-                                          color="white"
-                                          sx={{
-                                            fill: "white",
-                                          }}
-                                        />
-                                      ) : (
-                                        <ClearIcon
-                                          color="white"
-                                          sx={{
-                                            fill: "white",
-                                          }}
-                                        />
-                                      )}
-                                    </IconButton>
+                                      },
+                                    }}
+                                  >
+                                    {status ? (
+                                      <CheckIcon
+                                        color="white"
+                                        sx={{
+                                          fill: "white",
+                                          fontSize: "1em",
+                                        }}
+                                      />
+                                    ) : (
+                                      <ClearIcon
+                                        color="white"
+                                        sx={{
+                                          fill: "white",
+                                          fontSize: "1em",
+                                        }}
+                                      />
+                                    )}
                                   </IconButton>
                                 </Tooltip>
                               </TableCell>

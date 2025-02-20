@@ -100,7 +100,7 @@ const AddNewUserData = [
   },
 ];
 
-function UserManagement() {
+function User() {
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
@@ -172,8 +172,6 @@ function UserManagement() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <h2>User Management</h2>
-
       <AddNewUser
         data={AddNewUserData}
         title="Add New User"
@@ -199,4 +197,4 @@ function UserManagement() {
   );
 }
 
-export default UserManagement;
+export default User;

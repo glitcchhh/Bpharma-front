@@ -21,7 +21,8 @@ const AddNewUser = ({ buttonLabel = "New User", title = "", data = [] }) => {
           display: "flex",
           justifyContent: "flex-end",
           alignItems: "center",
-          marginBottom: "20px",
+          marginBottom: "10px",
+          marginTop: "10px",
         }}
       >
         <Button

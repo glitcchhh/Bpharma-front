@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 const modalTableHeadCells = [
   {
@@ -109,6 +110,12 @@ function Expiry() {
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
 
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
+
   const openModal = () => {
     setOpen(true);
   };
@@ -164,13 +171,13 @@ function Expiry() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <h2>Product Expiry</h2>
-
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Expiry"
-        buttonLabel="New Expiry"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Expiry"
+          buttonLabel="New Expiry"
+        />
+      )}
 
       {!isLoading && (
         <>

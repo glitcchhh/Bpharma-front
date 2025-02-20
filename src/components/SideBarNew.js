@@ -5,7 +5,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -14,20 +13,18 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Badge, Collapse } from "@mui/material";
+import { Badge, Collapse, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
+import { bottomItems, drawerData } from "../constants/Constants";
+import { useAppBarTitle } from "../hooks/useAppBarTitle";
 
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
   const navigate = useNavigate(); // Initialize navigate
   const location = useLocation(); // Initialize location to get the current route
-
+  const { getAppBarTitle } = useAppBarTitle();
   const [openProduct, setOpenProduct] = React.useState(false);
   const [openManagement, setOpenManagement] = React.useState(false);
 
@@ -67,45 +64,13 @@ function ResponsiveDrawer(props) {
 
   const [open, setOpen] = React.useState({});
   const handleToggle = (label) => {
-    setOpen((prevState) => ({ ...prevState, [label]: !prevState[label] }));
+    // setOpen((prevState) => ({ ...prevState, [label]: !prevState[label] }));
+    setOpen((prevState) => ({ [label]: !prevState[label] }));
   };
 
-  const drawerData = [
-    {
-      label: "Dashboard",
-      path: "/dashboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      label: "Product",
-      path: "/product",
-      icon: <ShoppingCartIcon />,
-      children: [
-        { label: "Claim", path: "/product/claim" },
-        { label: "Offer", path: "/product/offer" },
-        { label: "Expiry", path: "/product/expiry" },
-        { label: "Sample", path: "/product/sample" },
-        { label: "Near Expiry", path: "/product/near-expiry" },
-        { label: "Compliments", path: "/product/compliments" },
-      ],
-    },
-    {
-      label: "Management",
-      path: "/management",
-      icon: <PersonIcon />,
-      children: [
-        { label: "User", path: "/management/user" },
-        { label: "Distributor", path: "/management/distributor" },
-        { label: "Territory", path: "/management/territory" },
-        { label: "Attach", path: "/management/attach" },
-      ],
-    },
-  ];
-
-  const bottomItems = [
-    { label: "Settings", path: "/settings", icon: <SettingsIcon /> },
-    { label: "Logout", path: "/logout", icon: <LogoutIcon /> },
-  ];
+  const { label: AppBarTitle, subTitle } = getAppBarTitle({
+    path: location.pathname,
+  });
 
   const drawer = (
     <div style={{ height: "100vh" }}>
@@ -115,7 +80,7 @@ function ResponsiveDrawer(props) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "64px",
+            height: "68px",
             bgcolor: "white",
             color: "#3f51b5",
           }}
@@ -198,7 +163,11 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+      }}
+    >
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -207,9 +176,16 @@ function ResponsiveDrawer(props) {
           ml: { md: `${drawerWidth}px` },
           bgcolor: "white",
           color: "grey",
+          boxShadow: "none",
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            height: {
+              md: "68px",
+            },
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -219,6 +195,39 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
+
+          <Box>
+            <Typography
+              sx={{
+                color: "black",
+                fontSize: {
+                  xs: "16px",
+                  md: "22px",
+                },
+                lineHeight: "normal",
+              }}
+              variant="h5"
+              noWrap
+              component="div"
+            >
+              {AppBarTitle}
+            </Typography>
+            <Typography
+              sx={{
+                color: "black",
+                fontSize: {
+                  xs: "11px",
+                  md: "13px",
+                },
+                lineHeight: "normal",
+              }}
+              variant="p"
+              noWrap
+              component="small"
+            >
+              {subTitle}
+            </Typography>
+          </Box>
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: "flex" }}>
@@ -242,6 +251,8 @@ function ResponsiveDrawer(props) {
             </IconButton>
           </Box>
         </Toolbar>
+
+        <Divider />
       </AppBar>
 
       <Box
@@ -249,7 +260,6 @@ function ResponsiveDrawer(props) {
         sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
@@ -283,17 +293,6 @@ function ResponsiveDrawer(props) {
           {drawer}
         </Drawer>
       </Box>
-      {/* <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        {children}
-      </Box> */}
     </Box>
   );
 }

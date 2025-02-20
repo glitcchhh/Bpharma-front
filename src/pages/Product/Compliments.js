@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AddNewUser from "../../components/AddNewUser";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthProvider";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 // Sample offer data
 const data = [
@@ -81,17 +84,25 @@ const AddNewUserData = [
 
 function Compliments() {
   const [open, setOpen] = useState(false);
+  const { token, user } = useAuth();
+
+  const { pathname } = useLocation();
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
 
   return (
     <>
       <>
-        <h2>Product Expiry</h2>
-
-        <AddNewUser
-          data={AddNewUserData}
-          title="Add New Compliments"
-          buttonLabel="New Compliments"
-        />
+        {createUserPermission && (
+          <AddNewUser
+            data={AddNewUserData}
+            title="Add New Compliments"
+            buttonLabel="New Compliments"
+          />
+        )}
 
         {/* Offer Table */}
         <TableContainer component={Paper}>

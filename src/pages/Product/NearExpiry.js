@@ -1,13 +1,13 @@
 // src/pages/Product/offer.js
 import React, { useCallback, useEffect, useState } from "react";
 
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import AdvancedTable from "../../components/AdvancedTable";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 const modalTableHeadCells = [
   {
@@ -111,6 +111,12 @@ function NearExpiry() {
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
 
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
+
   const openModal = () => {
     setOpen(true);
   };
@@ -166,13 +172,13 @@ function NearExpiry() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <h2>Product Sample</h2>
-
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Near Expiry"
-        buttonLabel="New Near Expiry"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Near Expiry"
+          buttonLabel="New Near Expiry"
+        />
+      )}
 
       {!isLoading && (
         <>
