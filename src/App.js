@@ -64,7 +64,7 @@ function Layout({ children }) {
       <div
         style={{
           flex: 1,
-          background: "#f1f1f2",
+          background: "#fff",
           overflow: "hidden",
           minHeight: "100vh",
         }}
@@ -74,34 +74,47 @@ function Layout({ children }) {
             width: "100%",
             height: "100%",
           }}
-          padding={{
-            xs: "20px 10px",
-            sm: "30px 20px",
-            md: "40px 20px",
-            lg: "40px 20px",
-          }}
+          padding={
+            showLayout
+              ? {
+                  xs: "20px 10px",
+                  sm: "30px 20px",
+                  md: "40px 20px",
+                  lg: "40px 20px",
+                }
+              : {}
+          }
           sx={{
-            mt: {
-              xs: "55px",
-              sm: "65px",
-              lg: "65px",
-            },
+            background: showLayout ? "#f1f1f2" : "#fff",
+            mt: showLayout
+              ? {
+                  xs: "55px",
+                  sm: "65px",
+                  lg: "65px",
+                }
+              : {},
           }}
         >
           <Box
             sx={{
               background: "#fff",
-              borderRadius: {
-                xs: "10px",
-                md: "10px",
-              },
+              borderRadius: showLayout
+                ? {
+                    xs: "10px",
+                    md: "10px",
+                  }
+                : {},
             }}
-            padding={{
-              xs: "20px",
-              sm: "20px",
-              md: "20px",
-              lg: "20px",
-            }}
+            padding={
+              showLayout
+                ? {
+                    xs: "20px",
+                    sm: "20px",
+                    md: "20px",
+                    lg: "20px",
+                  }
+                : {}
+            }
           >
             {children}
           </Box>
