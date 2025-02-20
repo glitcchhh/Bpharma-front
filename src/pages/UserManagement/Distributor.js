@@ -176,8 +176,6 @@ function DistributorManagementModal() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <h2>Distributor Management</h2>
-
       <AddNewUser
         data={AddNewUserData}
         title="Add New Distributor"
