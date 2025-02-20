@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
-import { getUserPermissions } from "../../constants/Constants";
+import { getMonthName } from "../../constants/Constants";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 // import {
 //   generateSampleData,
@@ -19,9 +19,9 @@ const modalTableHeadCells = [
     id: "id",
   },
   {
-    id: "code",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -29,9 +29,19 @@ const modalTableHeadCells = [
     label: "Product",
   },
   {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+  {
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
+  },
+  {
+    id: "req_date",
+    disablePadding: false,
+    label: "Request Date",
   },
   {
     id: "remarks",
@@ -46,9 +56,9 @@ const headCells = [
     id: "id",
   },
   {
-    id: "code",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -56,9 +66,19 @@ const headCells = [
     label: "Product",
   },
   {
+    id: "customer_name",
+    disablePadding: false,
+    label: "Customer",
+  },
+  {
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
+  },
+  {
+    id: "req_date",
+    disablePadding: false,
+    label: "Request Date",
   },
   {
     id: "remarks",
@@ -75,27 +95,32 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "user-code",
-    label: "User Code",
+    name: "product_id",
+    label: "Product ID",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "requested_emp_id",
+    label: "Employee ID",
   },
   {
-    name: "email",
-    label: "Email",
-    type: "email",
+    name: "total_qty",
+    label: "Total Quantity",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
+    name: "requested_date",
+    label: "Requested Date",
   },
   {
-    name: "phone",
-    label: "Phone",
-    type: "tel",
+    name: "customer_name",
+    label: "Customer Name",
+  },
+  {
+    name: "status",
+    label: "Status",
+  },
+  {
+    name: "remarks",
+    label: "Remarks",
   },
 ];
 
@@ -128,11 +153,21 @@ function Sample() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
+        const Day = new Date(obj.created_on).getDate();
+        const Month = new Date(obj.requested_date).getMonth() + 1;
+        const Year = new Date(obj.requested_date).getFullYear();
+        const MonthName = getMonthName(Month);
+        const formattedMonth = Month.toString().padStart(2, "0");
+        const requestNumber = `SR/${obj.sample_req_id}/${Year}-${formattedMonth}`;
+        const createdOn = `${MonthName} ${Day}, ${Year}`;
+
         return {
-          id: obj.employee.emp_id,
-          code: obj.employee.emp_code,
+          id: obj.sample_req_id,
+          request_number: requestNumber,
           product_name: obj.product.product_name,
+          customer_name: obj.customer_name,
           quantity: obj.total_qty,
+          req_date: createdOn,
           remarks: obj.remarks,
         };
       });
@@ -170,6 +205,7 @@ function Sample() {
           data={AddNewUserData}
           title="Add New Sample"
           buttonLabel="New Sample"
+          url="/api/insert-sample"
         />
       )}
 

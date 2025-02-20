@@ -9,14 +9,17 @@ import {
   TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Api } from "../api/Api";
+import { useDataIngestion } from "../hooks/useDataIngestion";
 
 const AddNewUserModal = ({
   open,
   handleClose,
   title = "Add New User",
   data = [],
+  url = "/employee/create",
 }) => {
+  const { saveDataIngestion } = useDataIngestion();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -29,10 +32,20 @@ const AddNewUserModal = ({
 
     try {
       // Send POST request
-      const response = await Api.post("/employee/create", formData);
+      const response = await saveDataIngestion({
+        url,
+        method: "post",
+        data: formData,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
       console.log("User created successfully:", response.data);
 
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error("Error creating user:", error);
     }

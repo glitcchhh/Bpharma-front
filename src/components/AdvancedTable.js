@@ -68,11 +68,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead
-      sx={{
-        backgroundColor: "#5037f436",
-      }}
-    >
+    <TableHead>
       <TableRow>
         <TableCell
           padding="checkbox"
@@ -80,6 +76,7 @@ function EnhancedTableHead(props) {
             fontWeight: 600,
             borderRadius: "5px 0 0 5px",
             borderBottom: "none",
+            backgroundColor: "#dad5fd",
           }}
         >
           <Checkbox
@@ -103,6 +100,7 @@ function EnhancedTableHead(props) {
                 sx={{
                   fontWeight: 600,
                   borderBottom: "none",
+                  backgroundColor: "#dad5fd",
                   ":last-child": {
                     borderRadius: "0 5px 5px 0",
                   },
@@ -374,8 +372,9 @@ export default function AdvancedTable({
           <TableContainer sx={{ maxHeight: "400px", borderRadius: "5px" }}>
             <Table
               sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
               size={dense ? "small" : "medium"}
+              stickyHeader
+              aria-label="sticky table"
             >
               <EnhancedTableHead
                 numSelected={selected.length}

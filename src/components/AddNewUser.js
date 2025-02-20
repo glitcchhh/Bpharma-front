@@ -3,7 +3,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import AddNewUserModal from "./AddNewModal";
 
-const AddNewUser = ({ buttonLabel = "New User", title = "", data = [] }) => {
+const AddNewUser = ({
+  buttonLabel = "New User",
+  title = "",
+  data = [],
+  url,
+}) => {
   const [openAddUserModal, setOpenAddUserModal] = useState(false);
 
   const handleOpenAddUserModal = () => {
@@ -43,6 +48,7 @@ const AddNewUser = ({ buttonLabel = "New User", title = "", data = [] }) => {
         title={title}
         handleClose={handleCloseAddUserModal}
         data={data}
+        url={url}
       />
     </>
   );

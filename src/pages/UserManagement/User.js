@@ -126,12 +126,12 @@ function User() {
 
       const tableFormattedData = response.data.data.roles.map((obj) => {
         const CreatedDay = new Date(obj.created_on).getDate();
-        const CreatedMonth = new Date(obj.created_on).getMonth();
+        const CreatedMonth = new Date(obj.created_on).getMonth() + 1;
         const CreatedMonthName = getMonthName(CreatedMonth);
         const CreatedYear = new Date(obj.created_on).getFullYear();
 
         const UpdatedDay = new Date(obj.updated_on).getDate();
-        const UpdatedMonth = new Date(obj.updated_on).getMonth();
+        const UpdatedMonth = new Date(obj.updated_on).getMonth() + 1;
         const UpdatedMonthName = getMonthName(UpdatedMonth);
         const UpdatedYear = new Date(obj.updated_on).getFullYear();
 
