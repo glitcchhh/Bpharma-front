@@ -14,6 +14,7 @@ import ResponsiveDrawer from "./components/SideBarNew";
 import { Box } from "@mui/material";
 import AuthProvider, { useAuth } from "./contexts/AuthProvider";
 import { Height } from "@mui/icons-material";
+import { useUserPermission } from "./hooks/useUserPermissions";
 
 const Sample = React.lazy(() => import("./pages/Product/Sample"));
 const User = React.lazy(() => import("./pages/UserManagement/User"));
@@ -26,8 +27,8 @@ const Attach = React.lazy(() => import("./pages/UserManagement/Attach"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Login = React.lazy(() => import("./pages/Login"));
 const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
-const Claim = React.lazy(() => import("./pages/Product/claim"));
-const Offer = React.lazy(() => import("./pages/Product/offer"));
+const Claim = React.lazy(() => import("./pages/Product/Claim"));
+const Offer = React.lazy(() => import("./pages/Product/Offer"));
 const Expiry = React.lazy(() => import("./pages/Product/Expiry"));
 const NearExpiry = React.lazy(() => import("./pages/Product/NearExpiry"));
 const Compliments = React.lazy(() => import("./pages/Product/Compliments"));
@@ -40,6 +41,10 @@ function Layout({ children }) {
   const navigate = useNavigate();
 
   const { pathname: currentPath } = location;
+  const { getUserPermissions } = useUserPermission();
+  const noDisplayPermission = getUserPermissions({
+    permissionType: "no-display",
+  });
 
   useEffect(() => {
     if (!token) {
@@ -48,9 +53,13 @@ function Layout({ children }) {
       if (currentPath == "/error") return;
       navigate("/login");
     } else {
+      if (noDisplayPermission) {
+        navigate("/login");
+        window.location.reload();
+      }
       if (currentPath == "/") navigate("/dashboard");
     }
-  }, [token, currentPath]);
+  }, [token, currentPath, noDisplayPermission]);
 
   // List of routes where you don't want to show the sidebar and header
   const noLayoutRoutes = ["/login"];

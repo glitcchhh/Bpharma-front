@@ -30,6 +30,7 @@ export const drawerData = [
     label: "Dashboard",
     path: "/dashboard",
     icon: <DashboardIcon />,
+    title: "Dashboard",
     subTitle: "Detailed dashboard information",
   },
   {
@@ -40,31 +41,37 @@ export const drawerData = [
       {
         label: "Claim",
         path: "/product/claim",
+        title: "Product Claim",
         subTitle: "Detailed claim information",
       },
       {
         label: "Offer",
         path: "/product/offer",
+        title: "Product Offer",
         subTitle: "Detailed offer information",
       },
       {
         label: "Expiry",
         path: "/product/expiry",
+        title: "Expiry Request",
         subTitle: "Detailed expiry information",
       },
       {
         label: "Sample",
         path: "/product/sample",
+        title: "Sample Request",
         subTitle: "Detailed sample information",
       },
-      {
-        label: "Near Expiry",
-        path: "/product/near-expiry",
-        subTitle: "Detailed near expiry information",
-      },
+      // {
+      //   label: "Near Expiry",
+      //   path: "/product/near-expiry",
+      //   title: "Near Expiry Request",
+      //   subTitle: "Detailed near expiry information",
+      // },
       {
         label: "Compliments",
         path: "/product/compliments",
+        title: "Compliments",
         subTitle: "Detailed compliments information",
       },
     ],
@@ -77,16 +84,19 @@ export const drawerData = [
       {
         label: "User",
         path: "/management/user",
+        title: "User Management",
         subTitle: "Detailed user information",
       },
       {
         label: "Distributor",
         path: "/management/distributor",
+        title: "Distributor Management",
         subTitle: "Detailed distributor information",
       },
       {
         label: "Attach",
         path: "/management/attach",
+        title: "Attach Management",
         subTitle: "Detailed attach information",
       },
     ],
@@ -99,6 +109,7 @@ export const drawerData = [
       {
         label: "Report 1",
         path: "/reports/report-1",
+        title: "Report 1",
         subTitle: "Detailed reports information",
       },
     ],
@@ -116,27 +127,93 @@ export const userPermissions = [
     permissions: [
       {
         path: "/product/claim",
-        "/product/claim": { "create-user": false },
+        "/product/claim": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/offer",
-        "/product/offer": { "create-user": false },
+        "/product/offer": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/expiry",
-        "/product/expiry": { "create-user": false },
+        "/product/expiry": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/sample",
-        "/product/sample": { "create-user": false },
+        "/product/sample": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/near-expiry",
-        "/product/near-expiry": { "create-user": false },
+        "/product/near-expiry": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/compliments",
-        "/product/compliments": { "create-user": false },
+        "/product/compliments": {
+          "create-user": false,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management/user",
+        "/management/user": {
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management/distributor",
+        "/management/distributor": {
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management/attach",
+        "/management/attach": {
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
     ],
   },
@@ -145,27 +222,102 @@ export const userPermissions = [
     permissions: [
       {
         path: "/product/claim",
-        "/product/claim": { "create-user": true },
+        "/product/claim": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/offer",
-        "/product/offer": { "create-user": true },
+        "/product/offer": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/expiry",
-        "/product/expiry": { "create-user": true },
+        "/product/expiry": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/sample",
-        "/product/sample": { "create-user": true },
+        "/product/sample": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/near-expiry",
-        "/product/near-expiry": { "create-user": true },
+        "/product/near-expiry": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
       },
       {
         path: "/product/compliments",
-        "/product/compliments": { "create-user": true },
+        "/product/compliments": {
+          "create-user": true,
+          accept: false,
+          reject: false,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management",
+        "/management": {
+          "no-display": true,
+        },
+      },
+      {
+        path: "/management/user",
+        "/management/user": {
+          "no-display": true,
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management/distributor",
+        "/management/distributor": {
+          "no-display": true,
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
+      },
+      {
+        path: "/management/attach",
+        "/management/attach": {
+          "no-display": true,
+          "create-user": true,
+          accept: true,
+          reject: true,
+          delete: true,
+          edit: true,
+        },
       },
     ],
   },

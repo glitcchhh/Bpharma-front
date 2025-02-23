@@ -7,15 +7,16 @@ import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
+import { getMonthName } from "../../constants/Constants";
 
 const modalTableHeadCells = [
   {
     id: "id",
   },
   {
-    id: "employee_name",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -26,6 +27,21 @@ const modalTableHeadCells = [
     id: "customer_name",
     disablePadding: false,
     label: "Customer",
+  },
+  {
+    id: "location",
+    disablePadding: false,
+    label: "Location",
+  },
+  {
+    id: "quantity",
+    disablePadding: false,
+    label: "Quantity",
+  },
+  {
+    id: "offer",
+    disablePadding: false,
+    label: "Offer",
   },
 ];
 
@@ -35,9 +51,9 @@ const headCells = [
     id: "id",
   },
   {
-    id: "employee_name",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -48,6 +64,21 @@ const headCells = [
     id: "customer_name",
     disablePadding: false,
     label: "Customer",
+  },
+  {
+    id: "location",
+    disablePadding: false,
+    label: "Location",
+  },
+  {
+    id: "quantity",
+    disablePadding: false,
+    label: "Quantity",
+  },
+  {
+    id: "offer",
+    disablePadding: false,
+    label: "Offer",
   },
   {
     id: "more",
@@ -59,27 +90,32 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "user-code",
-    label: "User Code",
+    name: "product_id",
+    label: "Product ID",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "requested_emp_id",
+    label: "Employee ID",
   },
   {
-    name: "email",
-    label: "Email",
-    type: "email",
+    name: "product_name",
+    label: "Product Name",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
+    name: "customer_name",
+    label: "Customer Name",
   },
   {
-    name: "phone",
-    label: "Phone",
-    type: "tel",
+    name: "location",
+    label: "Location",
+  },
+  {
+    name: "quantity",
+    label: "Quantity",
+  },
+  {
+    name: "offer",
+    label: "Offer Quantity",
   },
 ];
 
@@ -114,11 +150,21 @@ function Offer() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
+        const Day = new Date(obj.requested_date).getDate();
+        const Month = new Date(obj.requested_date).getMonth() + 1;
+        const Year = new Date(obj.requested_date).getFullYear();
+        const MonthName = getMonthName(Month);
+        const formattedMonth = Month.toString().padStart(2, "0");
+        const requestNumber = `PO/${obj.offer_id}/${Year}-${formattedMonth}`;
+
         return {
           id: obj.offer_id,
-          employee_name: obj.employee.display_name,
+          request_number: requestNumber,
           product_name: obj.product.product_name,
           customer_name: obj.customer_name,
+          location: obj.location,
+          quantity: obj.qty,
+          offer: obj.offer_qty,
         };
       });
 

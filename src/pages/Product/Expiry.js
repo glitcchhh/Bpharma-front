@@ -7,15 +7,16 @@ import { useAuth } from "../../contexts/AuthProvider";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
+import { getMonthName } from "../../constants/Constants";
 
 const modalTableHeadCells = [
   {
     id: "id",
   },
   {
-    id: "employee",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -31,6 +32,11 @@ const modalTableHeadCells = [
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
+  },
+  {
+    id: "req_date",
+    disablePadding: false,
+    label: "Request Date",
   },
   {
     id: "remarks",
@@ -45,9 +51,9 @@ const headCells = [
     id: "id",
   },
   {
-    id: "employee",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee",
+    label: "Request No.",
   },
   {
     id: "product_name",
@@ -63,6 +69,11 @@ const headCells = [
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
+  },
+  {
+    id: "req_date",
+    disablePadding: false,
+    label: "Request Date",
   },
   {
     id: "remarks",
@@ -79,27 +90,37 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "user-code",
-    label: "User Code",
+    name: "product_id",
+    label: "Product ID",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "requested_emp_id",
+    label: "Employee ID",
   },
   {
-    name: "email",
-    label: "Email",
-    type: "email",
+    name: "product_name",
+    label: "Product Name",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
+    name: "customer_name",
+    label: "Customer Name",
   },
   {
-    name: "phone",
-    label: "Phone",
-    type: "tel",
+    name: "total_qty",
+    label: "Quantity",
+  },
+  {
+    name: "expairy_req_date",
+    label: "Request Date",
+    type: "date",
+  },
+  {
+    name: "status",
+    label: "Status",
+  },
+  {
+    name: "remarks",
+    label: "Remarks",
   },
 ];
 
@@ -133,12 +154,21 @@ function Expiry() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
+        const Day = new Date(obj.expairy_req_date).getDate();
+        const Month = new Date(obj.expairy_req_date).getMonth() + 1;
+        const Year = new Date(obj.expairy_req_date).getFullYear();
+        const MonthName = getMonthName(Month);
+        const formattedMonth = Month.toString().padStart(2, "0");
+        const requestNumber = `ER/${obj.expairy_req_id}/${Year}-${formattedMonth}`;
+        const requestDate = `${MonthName} ${Day}, ${Year}`;
+
         return {
           id: obj.expairy_req_id,
-          employee: obj.employee.display_name,
+          request_number: requestNumber,
           product_name: obj.product.product_name,
           customer_name: obj.customer_name,
           quantity: obj.total_qty,
+          req_date: requestDate,
           remarks: obj.remarks,
         };
       });
@@ -176,6 +206,7 @@ function Expiry() {
           data={AddNewUserData}
           title="Add New Expiry"
           buttonLabel="New Expiry"
+          url="/api/insert-expiry"
         />
       )}
 

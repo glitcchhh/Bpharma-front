@@ -27,3 +27,22 @@
   width: 15px;
   height: 15px;
 }
+
+.custom-text-area {
+  height: 70px;
+  min-width: 100%;
+  width: 616px;
+  padding: 8.5px 14px;
+  border: 1.5px solid #c4c4c4;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+div.error-msg {
+  color: red;
+  margin-top: -10px;
+  background: antiquewhite;
+  border-radius: 5px;
+  padding: 2px 14px;
+  font-size: 12px;
+}

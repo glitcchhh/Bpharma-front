@@ -11,33 +11,33 @@ const modalTableHeadCells = [
   {
     id: "id",
   },
-  {
-    id: "code",
-    disablePadding: false,
-    label: "Employee Code",
-  },
+  // {
+  //   id: "code",
+  //   disablePadding: false,
+  //   label: "Employee Code",
+  // },
   {
     id: "distributor_name",
     disablePadding: false,
     label: "Distributor",
   },
   {
-    id: "phone",
+    id: "distr_phone_number",
     disablePadding: false,
     label: "Phone",
   },
   {
-    id: "email",
+    id: "distr_email",
     disablePadding: false,
     label: "Email",
   },
   {
-    id: "address1",
+    id: "address_1",
     disablePadding: false,
     label: "Address 1",
   },
   {
-    id: "address2",
+    id: "address_2",
     disablePadding: false,
     label: "Address 2",
   },
@@ -48,33 +48,33 @@ const headCells = [
   {
     id: "id",
   },
-  {
-    id: "code",
-    disablePadding: false,
-    label: "Employee Code",
-  },
+  // {
+  //   id: "code",
+  //   disablePadding: false,
+  //   label: "Employee Code",
+  // },
   {
     id: "distributor_name",
     disablePadding: false,
     label: "Distributor",
   },
   {
-    id: "phone",
+    id: "distr_phone_number",
     disablePadding: false,
     label: "Phone",
   },
   {
-    id: "email",
+    id: "distr_email",
     disablePadding: false,
     label: "Email",
   },
   {
-    id: "address1",
+    id: "address_1",
     disablePadding: false,
     label: "Address 1",
   },
   {
-    id: "address2",
+    id: "address_2",
     disablePadding: false,
     label: "Address 2",
   },
@@ -139,12 +139,12 @@ function DistributorManagementModal() {
       const tableFormattedData = response.data.data.distributors.map((obj) => {
         return {
           id: obj.distributor_id,
-          code: obj.distributor_code,
+          // code: obj.distributor_code,
           distributor_name: obj.distributor_name,
-          phone: obj.distr_phone_number,
-          email: obj.distr_email,
-          address1: obj.address_1,
-          address2: obj.address_2,
+          distr_phone_number: obj.distr_phone_number,
+          distr_email: obj.distr_email,
+          address_1: obj.address_1,
+          address_2: obj.address_2,
         };
       });
 
@@ -166,6 +166,29 @@ function DistributorManagementModal() {
       navigate("/login");
     }
   }, [token]);
+
+  const updateCellData = useCallback(async ({ id = null, data = {} }) => {
+    const updatedData = { ...data };
+    updatedData.emp_id = data.id;
+    delete updatedData.id;
+
+    try {
+      const response = await saveDataIngestion({
+        url: `api/update-distributor/${id}`,
+        method: "put",
+        data: updatedData,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      window.location.reload();
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  });
 
   return (
     <>
@@ -190,9 +213,7 @@ function DistributorManagementModal() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
-              deleteAction={true}
-              acceptAction={false}
-              rejectAction={false}
+              updateCellData={updateCellData}
             />
           )}
         </>

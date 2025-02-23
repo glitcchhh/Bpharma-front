@@ -7,20 +7,36 @@ import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
+import { getMonthName } from "../../constants/Constants";
 
 const modalTableHeadCells = [
   {
     id: "id",
   },
   {
-    id: "employee_name",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
-    id: "distributor_name",
+    id: "tsm",
     disablePadding: false,
-    label: "Product",
+    label: "TSM",
+  },
+  {
+    id: "stockist",
+    disablePadding: false,
+    label: "Stockist",
+  },
+  {
+    id: "total_qty",
+    disablePadding: false,
+    label: "Stockist",
+  },
+  {
+    id: "free_qty",
+    disablePadding: false,
+    label: "Stockist",
   },
 ];
 
@@ -30,14 +46,29 @@ const headCells = [
     id: "id",
   },
   {
-    id: "employee_name",
+    id: "request_number",
     disablePadding: false,
-    label: "Employee Code",
+    label: "Request No.",
   },
   {
-    id: "distributor_name",
+    id: "tsm",
     disablePadding: false,
-    label: "Product",
+    label: "TSM",
+  },
+  {
+    id: "stockist",
+    disablePadding: false,
+    label: "Stockist",
+  },
+  {
+    id: "total_qty",
+    disablePadding: false,
+    label: "Total Quantity",
+  },
+  {
+    id: "free_qty",
+    disablePadding: false,
+    label: "Free Quantity",
   },
   {
     id: "more",
@@ -49,27 +80,29 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "user-code",
-    label: "User Code",
+    name: "distributor_id",
+    label: "Distributor ID",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "requested_emp_id",
+    label: "Requested Employee ID",
   },
   {
-    name: "email",
-    label: "Email",
-    type: "email",
+    name: "requested_date",
+    label: "Requested Date",
+    type: "date",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
+    name: "stockist",
+    label: "Stockist",
   },
   {
-    name: "phone",
-    label: "Phone",
-    type: "tel",
+    name: "total_qty",
+    label: "Total Quantity",
+  },
+  {
+    name: "free_qty",
+    label: "Free Quantity",
   },
 ];
 
@@ -104,10 +137,21 @@ function Claim() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
+        const Day = new Date(obj.requested_date).getDate();
+        const Month = new Date(obj.requested_date).getMonth() + 1;
+        const Year = new Date(obj.requested_date).getFullYear();
+        const MonthName = getMonthName(Month);
+        const formattedMonth = Month.toString().padStart(2, "0");
+        const requestNumber = `PC/${obj.claim_id}/${Year}-${formattedMonth}`;
+        const requestDate = `${MonthName} ${Day}, ${Year}`;
+
         return {
           id: obj.claim_id,
-          employee_name: obj.employee.display_name,
-          distributor_name: obj.distributor.distributor_name,
+          request_number: requestNumber,
+          tsm: obj.distributor.distributor_name,
+          stockist: obj.stockist,
+          total_qty: obj.total_qty,
+          free_qty: obj.free_qty,
         };
       });
 
@@ -144,6 +188,7 @@ function Claim() {
           data={AddNewUserData}
           title="Add New Claim"
           buttonLabel="New Claim"
+          url="/api/insert-claim"
         />
       )}
 

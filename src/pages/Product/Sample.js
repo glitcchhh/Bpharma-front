@@ -109,6 +109,7 @@ const AddNewUserData = [
   {
     name: "requested_date",
     label: "Requested Date",
+    type: "date",
   },
   {
     name: "customer_name",
@@ -153,13 +154,13 @@ function Sample() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
-        const Day = new Date(obj.created_on).getDate();
+        const Day = new Date(obj.requested_date).getDate();
         const Month = new Date(obj.requested_date).getMonth() + 1;
         const Year = new Date(obj.requested_date).getFullYear();
         const MonthName = getMonthName(Month);
         const formattedMonth = Month.toString().padStart(2, "0");
         const requestNumber = `SR/${obj.sample_req_id}/${Year}-${formattedMonth}`;
-        const createdOn = `${MonthName} ${Day}, ${Year}`;
+        const requestDate = `${MonthName} ${Day}, ${Year}`;
 
         return {
           id: obj.sample_req_id,
@@ -167,7 +168,7 @@ function Sample() {
           product_name: obj.product.product_name,
           customer_name: obj.customer_name,
           quantity: obj.total_qty,
-          req_date: createdOn,
+          req_date: requestDate,
           remarks: obj.remarks,
         };
       });

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDataIngestion } from "../hooks/useDataIngestion";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const AddNewUserModal = ({
   open,
@@ -19,6 +23,7 @@ const AddNewUserModal = ({
   url = "/employee/create",
 }) => {
   const { saveDataIngestion } = useDataIngestion();
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,8 +32,10 @@ const AddNewUserModal = ({
     const formData = {};
 
     data.forEach((value, key) => {
-      formData[key] = value;
+      if (value != "") formData[key] = value;
     });
+
+    console.log("formData :: ", formData);
 
     try {
       // Send POST request
@@ -47,12 +54,18 @@ const AddNewUserModal = ({
         window.location.reload();
       }, 500);
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.log("Error creating user:", error);
+      const errorDetails = error.response.data.error.details;
+      setError(errorDetails);
     }
   };
 
+  const showError = (name) => {
+    return error?.find(({ field }) => field == name) || null;
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} maxWidth="sm" fullWidth>
       <DialogTitle
         sx={{
           display: "flex",
@@ -79,6 +92,61 @@ const AddNewUserModal = ({
           autoComplete="off"
         >
           {data.map(({ name, label, type = "text" }, index) => {
+            const Error = showError(name);
+
+            if (name == "remarks") {
+              return (
+                <Fragment key={index}>
+                  <textarea
+                    style={{
+                      maxWidth: "535.5px",
+                      marginBottom: "4px",
+                    }}
+                    placeholder={label}
+                    className="custom-text-area"
+                    margin="dense"
+                    id={name + index}
+                    autoComplete="off"
+                    name={name}
+                  />
+                  {Error && (
+                    <>
+                      <div className="error-msg">{Error?.message}</div>
+                    </>
+                  )}
+                </Fragment>
+              );
+            }
+
+            if (type == "date") {
+              return (
+                <Fragment key={index}>
+                  <div
+                    style={{
+                      marginBottom: "4px",
+                    }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]}>
+                        <DatePicker
+                          label={label}
+                          name={name}
+                          format="YYYY-MM-DD"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              fullWidth: true,
+                            },
+                          }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+                  {Error && <div className="error-msg">{Error?.message}</div>}
+                </Fragment>
+              );
+            }
+
             return (
               <Fragment key={index}>
                 <TextField
@@ -92,6 +160,11 @@ const AddNewUserModal = ({
                   size="small"
                   name={name}
                 />
+                {Error && (
+                  <>
+                    <div className="error-msg">{Error?.message}</div>
+                  </>
+                )}
               </Fragment>
             );
           })}

@@ -36,6 +36,7 @@ import {
   TextField,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { useUserPermission } from "../hooks/useUserPermissions";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,6 +68,50 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
 
+  const { getUserPermissions } = useUserPermission();
+
+  const editPermission = getUserPermissions({
+    permissionType: "edit",
+  });
+
+  const renderCell = (headCell) => {
+    return (
+      <TableCell
+        key={headCell.id}
+        align="left"
+        padding={headCell.disablePadding ? "none" : "normal"}
+        sortDirection={orderBy === headCell.id ? order : false}
+        sx={{
+          fontWeight: 600,
+          borderBottom: "none",
+          backgroundColor: "#dad5fd",
+          ":last-child": {
+            borderRadius: "0 5px 5px 0",
+          },
+        }}
+      >
+        <>
+          {headCell.notSortable ? (
+            headCell.label
+          ) : (
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          )}
+        </>
+      </TableCell>
+    );
+  };
+
   return (
     <TableHead>
       <TableRow>
@@ -90,45 +135,13 @@ function EnhancedTableHead(props) {
           />
         </TableCell>
         {headCells.map((headCell) => {
-          if (headCell.id != "id") {
-            return (
-              <TableCell
-                key={headCell.id}
-                align="left"
-                padding={headCell.disablePadding ? "none" : "normal"}
-                sortDirection={orderBy === headCell.id ? order : false}
-                sx={{
-                  fontWeight: 600,
-                  borderBottom: "none",
-                  backgroundColor: "#dad5fd",
-                  ":last-child": {
-                    borderRadius: "0 5px 5px 0",
-                  },
-                }}
-              >
-                <>
-                  {headCell.notSortable ? (
-                    headCell.label
-                  ) : (
-                    <TableSortLabel
-                      active={orderBy === headCell.id}
-                      direction={orderBy === headCell.id ? order : "asc"}
-                      onClick={createSortHandler(headCell.id)}
-                    >
-                      {headCell.label}
-                      {orderBy === headCell.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === "desc"
-                            ? "sorted descending"
-                            : "sorted ascending"}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
-                  )}
-                </>
-              </TableCell>
-            );
+          if (
+            headCell.id !== "id" &&
+            (headCell.id !== "edit" || editPermission)
+          ) {
+            return renderCell(headCell);
           }
+          return null;
         })}
       </TableRow>
     </TableHead>
@@ -149,12 +162,23 @@ function EnhancedTableToolbar(props) {
     numSelected,
     openFilter,
     selected,
-    deleteAction = false,
+    deleteAction = true,
     acceptAction = true,
     rejectAction = true,
     handleDeleteClick = () => {},
     tableHeading,
   } = props;
+
+  const { getUserPermissions } = useUserPermission();
+  const acceptPermission = getUserPermissions({
+    permissionType: "accept",
+  });
+  const rejectPermission = getUserPermissions({
+    permissionType: "reject",
+  });
+  const deletePermission = getUserPermissions({
+    permissionType: "delete",
+  });
 
   return (
     <Toolbar
@@ -193,7 +217,7 @@ function EnhancedTableToolbar(props) {
       )}
       {numSelected > 0 ? (
         <>
-          {acceptAction && (
+          {acceptPermission && acceptAction && (
             <Tooltip title="Accept">
               <IconButton size="medium" color="success">
                 <CheckIcon />
@@ -201,7 +225,7 @@ function EnhancedTableToolbar(props) {
             </Tooltip>
           )}
 
-          {rejectAction && (
+          {rejectPermission && rejectAction && (
             <Tooltip title="Reject">
               <IconButton size="medium" color="error">
                 <ClearIcon />
@@ -209,7 +233,7 @@ function EnhancedTableToolbar(props) {
             </Tooltip>
           )}
 
-          {deleteAction && (
+          {deletePermission && deleteAction && (
             <Tooltip title="Delete">
               <IconButton
                 size="medium"
@@ -243,6 +267,8 @@ export default function AdvancedTable({
   acceptAction,
   rejectAction,
   tableHeading = "Available data",
+  // update api call
+  updateCellData = () => {},
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -256,6 +282,11 @@ export default function AdvancedTable({
   const [editValues, setEditValues] = useState({});
   const [deleteIdx, setDeleteIdx] = useState(null);
   const [openDeletePopOver, setOpenDeletePopOver] = useState(false);
+  const { getUserPermissions } = useUserPermission();
+
+  const editPermission = getUserPermissions({
+    permissionType: "edit",
+  });
 
   const startEditing = (index, row) => {
     console.log("start editing :: ", index, row);
@@ -267,9 +298,13 @@ export default function AdvancedTable({
     const { name, value } = e.target;
     setEditValues((prev) => ({ ...prev, [name]: value }));
   };
-  const saveEdit = () => {
-    console.log("Save", editValues);
+  const saveEdit = ({ index }) => {
+    console.log("Save", { index }, editValues);
     setEditingIdx(null);
+    updateCellData({
+      id: index,
+      data: editValues,
+    });
   };
 
   const handleDeleteClick = (index) => {
@@ -279,6 +314,8 @@ export default function AdvancedTable({
   const handleDeleteConfirm = () => {
     setOpenDeletePopOver(false);
     setDeleteIdx(null);
+
+    console.log("selected ::: ", selected);
   };
   const handleDeleteCancel = () => {
     setOpenDeletePopOver(false);
@@ -419,50 +456,54 @@ export default function AdvancedTable({
                             </React.Fragment>
                           );
                         } else if (headCell.id == "edit") {
-                          return editingIdx == i ? (
-                            <React.Fragment key={index}>
-                              <TableCell>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                  }}
-                                >
-                                  <Tooltip title="Save">
-                                    <IconButton
-                                      size="medium"
-                                      color="success"
-                                      onClick={saveEdit}
-                                    >
-                                      <CheckIcon />
-                                    </IconButton>
-                                  </Tooltip>
-
-                                  <Tooltip title="Cancel">
-                                    <IconButton
-                                      size="medium"
-                                      color="error"
-                                      onClick={() => setEditingIdx(null)}
-                                    >
-                                      <ClearIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Box>
-                              </TableCell>
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment key={index}>
-                              <TableCell>
-                                <Tooltip title="edit">
-                                  <IconButton
-                                    size="medium"
-                                    onClick={() => startEditing(i, row)}
+                          if (editPermission) {
+                            return editingIdx == i ? (
+                              <React.Fragment key={index}>
+                                <TableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                    }}
                                   >
-                                    <EditIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </TableCell>
-                            </React.Fragment>
-                          );
+                                    <Tooltip title="Save">
+                                      <IconButton
+                                        size="medium"
+                                        color="success"
+                                        onClick={(value) =>
+                                          saveEdit({ index: row.id })
+                                        }
+                                      >
+                                        <CheckIcon />
+                                      </IconButton>
+                                    </Tooltip>
+
+                                    <Tooltip title="Cancel">
+                                      <IconButton
+                                        size="medium"
+                                        color="error"
+                                        onClick={() => setEditingIdx(null)}
+                                      >
+                                        <ClearIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Box>
+                                </TableCell>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment key={index}>
+                                <TableCell>
+                                  <Tooltip title="edit">
+                                    <IconButton
+                                      size="medium"
+                                      onClick={() => startEditing(i, row)}
+                                    >
+                                      <EditIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
+                              </React.Fragment>
+                            );
+                          }
                         } else if (headCell.id == "more") {
                           return (
                             <React.Fragment key={index}>

@@ -18,6 +18,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { bottomItems, drawerData } from "../constants/Constants";
 import { useAppBarTitle } from "../hooks/useAppBarTitle";
+import { useAuth } from "../contexts/AuthProvider";
+import { useUserPermission } from "../hooks/useUserPermissions";
 
 const drawerWidth = 240;
 
@@ -38,6 +40,12 @@ function ResponsiveDrawer(props) {
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const { user: userDetails } = useAuth();
+  const { getUserPermissions } = useUserPermission();
+
+  const currentUser = userDetails.user;
+  const TSM = currentUser == "tsm";
+  const superAdmin = currentUser == "super-admin";
 
   // Handler for navigating to different routes
   const handleNavigation = (path) => {
@@ -68,9 +76,12 @@ function ResponsiveDrawer(props) {
     setOpen((prevState) => ({ [label]: !prevState[label] }));
   };
 
-  const { label: AppBarTitle, subTitle } = getAppBarTitle({
+  const AppBarTitleValues = getAppBarTitle({
     path: location.pathname,
   });
+
+  const AppBarTitle = AppBarTitleValues?.title;
+  const subTitle = AppBarTitleValues?.subTitle;
 
   const drawer = (
     <div style={{ height: "100vh" }}>
@@ -104,42 +115,52 @@ function ResponsiveDrawer(props) {
         }}
       >
         <List component="nav">
-          {drawerData.map(({ icon, path, label, children }, index) => (
-            <React.Fragment key={index}>
-              <ListItemButton
-                onClick={() => {
-                  if (children) {
-                    handleToggle(label);
-                  } else {
-                    handleNavigation(path);
-                  }
-                }}
-                sx={{
-                  bgcolor: isSelected(path) ? "#edf4fb" : "inherit",
-                }}
-              >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={label} />
-                {children && (open[label] ? <ExpandLess /> : <ExpandMore />)}
-              </ListItemButton>
-              {children && (
-                <Collapse in={open[label]} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    {children.map((child) => (
-                      <ListItemButton
-                        key={child.label}
-                        sx={{ pl: 4 }}
-                        onClick={() => handleNavigation(child.path)}
-                        selected={isSelected(child.path)}
-                      >
-                        <ListItemText primary={child.label} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
-              )}
-            </React.Fragment>
-          ))}
+          {drawerData.map(({ icon, path, label, children }, index) => {
+            const noDisplayPermission = getUserPermissions({
+              permissionType: "no-display",
+              currentPath: path,
+            });
+
+            if (!noDisplayPermission) {
+              return (
+                <React.Fragment key={index}>
+                  <ListItemButton
+                    onClick={() => {
+                      if (children) {
+                        handleToggle(label);
+                      } else {
+                        handleNavigation(path);
+                      }
+                    }}
+                    sx={{
+                      bgcolor: isSelected(path) ? "#edf4fb" : "inherit",
+                    }}
+                  >
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText primary={label} />
+                    {children &&
+                      (open[label] ? <ExpandLess /> : <ExpandMore />)}
+                  </ListItemButton>
+                  {children && (
+                    <Collapse in={open[label]} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {children.map((child) => (
+                          <ListItemButton
+                            key={child.label}
+                            sx={{ pl: 4 }}
+                            onClick={() => handleNavigation(child.path)}
+                            selected={isSelected(child.path)}
+                          >
+                            <ListItemText primary={child.label} />
+                          </ListItemButton>
+                        ))}
+                      </List>
+                    </Collapse>
+                  )}
+                </React.Fragment>
+              );
+            }
+          })}
         </List>
 
         <Box marginTop={"5em"}>
