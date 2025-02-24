@@ -16,6 +16,9 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 
+//define URLs here
+const listURL = "api/list-claim";
+
 // Sample offer data
 const data = [
   {

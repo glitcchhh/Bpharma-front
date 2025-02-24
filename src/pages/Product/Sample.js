@@ -13,6 +13,9 @@ import { useUserPermission } from "../../hooks/useUserPermissions";
 //   generateSampleDataForTable,
 // } from "../../constants/DummyData";
 
+// define URLs here
+const listURL = "api/list-sample";
+
 // make sure data passed to table have same id as modalTableHeadCells passed to its table
 const modalTableHeadCells = [
   {
@@ -149,7 +152,7 @@ function Sample() {
   const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
-        url: `api/list-sample?page=${1}&limit=${10}&search=${""}&sortBy=${"sample_req_id"}&sortOrder=${"desc"}`,
+        url: listURL,
       });
 
       if (response.data.status !== "SUCCESS") return;

@@ -270,6 +270,7 @@ export default function AdvancedTable({
   tableHeading = "Available data",
   // update api call
   updateCellData = () => {},
+  deleteURL = "",
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -314,7 +315,7 @@ export default function AdvancedTable({
 
     try {
       const response = await saveDataIngestion({
-        url: `api/delete-distributor/${id}`,
+        url: `${deleteURL}/${id}`,
         method: "delete",
       });
 

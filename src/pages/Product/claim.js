@@ -9,6 +9,9 @@ import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 import { getMonthName } from "../../constants/Constants";
 
+//define URLs here
+const listURL = "api/list-claim";
+
 const modalTableHeadCells = [
   {
     id: "id",
@@ -131,7 +134,7 @@ function Claim() {
   const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
-        url: `api/list-claim`,
+        url: listURL,
       });
 
       if (response.data.status !== "SUCCESS") return;

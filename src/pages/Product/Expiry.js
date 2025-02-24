@@ -9,6 +9,9 @@ import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 import { getMonthName } from "../../constants/Constants";
 
+//define URLs here
+const listURL = "api/list-expiry";
+
 const modalTableHeadCells = [
   {
     id: "id",
@@ -149,7 +152,7 @@ function Expiry() {
   const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
-        url: `api/list-expiry`,
+        url: listURL,
       });
 
       if (response.data.status !== "SUCCESS") return;

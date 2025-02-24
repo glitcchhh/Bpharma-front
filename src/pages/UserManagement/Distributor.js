@@ -8,6 +8,11 @@ import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 
+// define URLs here
+const listURL = "api/list-distributor";
+const updateURL = "api/update-distributor";
+const deleteURL = "api/delete-distributor";
+
 const modalTableHeadCells = [
   {
     id: "id",
@@ -146,7 +151,7 @@ function DistributorManagementModal() {
   const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
-        url: `api/list-distributor`,
+        url: listURL,
       });
 
       if (response.data.status !== "SUCCESS") return;
@@ -189,7 +194,7 @@ function DistributorManagementModal() {
 
     try {
       const response = await saveDataIngestion({
-        url: `api/update-distributor/${id}`,
+        url: `${updateURL}/${id}`,
         method: "put",
         data: updatedData,
       });
@@ -232,6 +237,7 @@ function DistributorManagementModal() {
               showMoreData={openModal}
               headCells={headCells}
               updateCellData={updateCellData}
+              deleteURL={deleteURL}
             />
           )}
         </>

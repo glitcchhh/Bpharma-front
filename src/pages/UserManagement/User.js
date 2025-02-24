@@ -22,6 +22,11 @@ import { useAuth } from "../../contexts/AuthProvider";
 import { getMonthName } from "../../constants/Constants";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 
+// define URLs here
+const listURL = "api/list-roles";
+const updateURL = "api/update-roles";
+const deleteURL = "api/delete-roles";
+
 const modalTableHeadCells = [
   {
     id: "id",
@@ -131,7 +136,7 @@ function User() {
   const fetchData = useCallback(async () => {
     try {
       const response = await saveDataIngestion({
-        url: `api/list-roles`,
+        url: listURL,
       });
 
       if (response.data.status !== "SUCCESS") return;
