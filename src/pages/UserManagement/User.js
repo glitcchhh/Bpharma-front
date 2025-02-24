@@ -20,6 +20,7 @@ import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import { getMonthName } from "../../constants/Constants";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 const modalTableHeadCells = [
   {
@@ -72,6 +73,12 @@ const headCells = [
     disablePadding: false,
     label: "Status",
   },
+  {
+    id: "edit",
+    disablePadding: false,
+    label: "Edit",
+    notSortable: true,
+  },
 ];
 
 const AddNewUserData = [
@@ -107,6 +114,11 @@ function User() {
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
 
   const openModal = () => {
     setOpen(true);
@@ -172,11 +184,13 @@ function User() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New User"
-        buttonLabel="New User"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New User"
+          buttonLabel="New User"
+        />
+      )}
 
       {!isLoading && (
         <>
@@ -186,9 +200,6 @@ function User() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
-              deleteAction={true}
-              acceptAction={false}
-              rejectAction={false}
             />
           )}
         </>

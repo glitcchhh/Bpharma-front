@@ -36,6 +36,14 @@
   border: 1.5px solid #c4c4c4;
   border-radius: 5px;
   font-size: 1rem;
+
+  &:hover {
+    border: black solid 0.5px;
+  }
+
+  &:focus-visible {
+    outline: #1976d2 auto 1px;
+  }
 }
 
 div.error-msg {

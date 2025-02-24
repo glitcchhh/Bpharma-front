@@ -37,6 +37,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useUserPermission } from "../hooks/useUserPermissions";
+import { useDataIngestion } from "../hooks/useDataIngestion";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -283,6 +284,7 @@ export default function AdvancedTable({
   const [deleteIdx, setDeleteIdx] = useState(null);
   const [openDeletePopOver, setOpenDeletePopOver] = useState(false);
   const { getUserPermissions } = useUserPermission();
+  const { saveDataIngestion, isLoading } = useDataIngestion();
 
   const editPermission = getUserPermissions({
     permissionType: "edit",
@@ -307,6 +309,25 @@ export default function AdvancedTable({
     });
   };
 
+  const deleteCellData = React.useCallback(async ({ id = null }) => {
+    if (isLoading) return;
+
+    try {
+      const response = await saveDataIngestion({
+        url: `api/delete-distributor/${id}`,
+        method: "delete",
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+      window.location.reload();
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  });
+
   const handleDeleteClick = (index) => {
     setDeleteIdx(index);
     setOpenDeletePopOver(true);
@@ -315,7 +336,9 @@ export default function AdvancedTable({
     setOpenDeletePopOver(false);
     setDeleteIdx(null);
 
-    console.log("selected ::: ", selected);
+    const id = selected?.length == 1 ? selected[0] : null;
+    deleteCellData({ id });
+    console.log("selected ::: ", selected, id, selected?.length);
   };
   const handleDeleteCancel = () => {
     setOpenDeletePopOver(false);

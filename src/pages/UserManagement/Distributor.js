@@ -6,6 +6,7 @@ import { useAuth } from "../../contexts/AuthProvider";
 import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
+import { useUserPermission } from "../../hooks/useUserPermissions";
 
 const modalTableHeadCells = [
   {
@@ -88,27 +89,36 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "user-code",
-    label: "User Code",
+    name: "distributor_name",
+    label: "Distributor Name",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "distributor_code",
+    label: "Distributor Code",
   },
   {
-    name: "email",
+    name: "distributor_district_id",
+    label: "Distributor District ID",
+  },
+  {
+    name: "distr_email",
     label: "Email",
     type: "email",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
-  },
-  {
-    name: "phone",
+    name: "distr_phone_number",
     label: "Phone",
     type: "tel",
+  },
+  {
+    name: "address_1",
+    label: "Address 1",
+    type: "textarea",
+  },
+  {
+    name: "address_2",
+    label: "Address 2",
+    type: "textarea",
   },
 ];
 
@@ -119,6 +129,11 @@ function DistributorManagementModal() {
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
+  const { getUserPermissions } = useUserPermission();
+
+  const createUserPermission = getUserPermissions({
+    permissionType: "create-user",
+  });
 
   const openModal = () => {
     setOpen(true);
@@ -199,11 +214,14 @@ function DistributorManagementModal() {
         modalTableHeadCells={modalTableHeadCells}
       />
 
-      <AddNewUser
-        data={AddNewUserData}
-        title="Add New Distributor"
-        buttonLabel="New Distributor"
-      />
+      {createUserPermission && (
+        <AddNewUser
+          data={AddNewUserData}
+          title="Add New Distributor"
+          buttonLabel="New Distributor"
+          url="/api/insert-distributor"
+        />
+      )}
 
       {!isLoading && (
         <>

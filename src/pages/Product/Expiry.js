@@ -121,6 +121,7 @@ const AddNewUserData = [
   {
     name: "remarks",
     label: "Remarks",
+    type: "textarea",
   },
 ];
 

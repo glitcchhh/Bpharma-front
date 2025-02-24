@@ -14,6 +14,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useAuth } from "../contexts/AuthProvider";
 
 const AddNewUserModal = ({
   open,
@@ -24,6 +25,7 @@ const AddNewUserModal = ({
 }) => {
   const { saveDataIngestion } = useDataIngestion();
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,7 +37,8 @@ const AddNewUserModal = ({
       if (value != "") formData[key] = value;
     });
 
-    console.log("formData :: ", formData);
+    // formData.emp_id = user.emp_id;
+    formData.emp_id = 2;
 
     try {
       // Send POST request
@@ -94,7 +97,7 @@ const AddNewUserModal = ({
           {data.map(({ name, label, type = "text" }, index) => {
             const Error = showError(name);
 
-            if (name == "remarks") {
+            if (type == "textarea") {
               return (
                 <Fragment key={index}>
                   <textarea

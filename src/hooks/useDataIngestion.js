@@ -24,6 +24,8 @@ export const useDataIngestion = () => {
           response = await Api.get(url, config);
         } else if (method == "put") {
           response = await Api.put(url, data, config);
+        } else if (method == "delete") {
+          response = await Api.delete(url, config);
         } else {
           response = await Api.post(url, data, config);
         }
