@@ -567,7 +567,7 @@ export default function AdvancedTable({
                                         color="white"
                                         sx={{
                                           fill: "white",
-                                          fontSize: "1em",
+                                          fontSize: "0.75em",
                                         }}
                                       />
                                     ) : (
@@ -575,7 +575,7 @@ export default function AdvancedTable({
                                         color="white"
                                         sx={{
                                           fill: "white",
-                                          fontSize: "1em",
+                                          fontSize: "0.75em",
                                         }}
                                       />
                                     )}
