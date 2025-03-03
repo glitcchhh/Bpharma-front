@@ -23,9 +23,9 @@ import { getMonthName } from "../../constants/Constants";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 
 // define URLs here
-const listURL = "api/list-roles";
-const updateURL = "api/update-roles";
-const deleteURL = "api/delete-roles";
+const listURL = "api/list-employee";
+const updateURL = "api/update-employee";
+const deleteURL = "api/delete-employee";
 const insertURL = "api/insert-employee";
 
 const modalTableHeadCells = [
@@ -33,10 +33,39 @@ const modalTableHeadCells = [
     id: "id",
   },
   {
-    id: "name",
+    id: "emp_code",
     disablePadding: false,
-    label: "User",
-    fixedWidth: true,
+    label: "Code",
+  },
+  {
+    id: "display_name",
+    disablePadding: false,
+    label: "Display Name",
+  },
+  {
+    id: "first_name",
+    disablePadding: false,
+    label: "First Name",
+  },
+  {
+    id: "last_name",
+    disablePadding: false,
+    label: "Last Name",
+  },
+  {
+    id: "email_id",
+    disablePadding: false,
+    label: "Email",
+  },
+  {
+    id: "phone_num",
+    disablePadding: false,
+    label: "Phone No.",
+  },
+  {
+    id: "district_name",
+    disablePadding: false,
+    label: "District",
   },
   {
     id: "status",
@@ -52,9 +81,39 @@ const headCells = [
     id: "id",
   },
   {
-    id: "name",
+    id: "emp_code",
     disablePadding: false,
-    label: "User",
+    label: "Code",
+  },
+  {
+    id: "display_name",
+    disablePadding: false,
+    label: "Display Name",
+  },
+  {
+    id: "first_name",
+    disablePadding: false,
+    label: "First Name",
+  },
+  {
+    id: "last_name",
+    disablePadding: false,
+    label: "Last Name",
+  },
+  {
+    id: "email_id",
+    disablePadding: false,
+    label: "Email",
+  },
+  {
+    id: "phone_num",
+    disablePadding: false,
+    label: "Phone No.",
+  },
+  {
+    id: "district_name",
+    disablePadding: false,
+    label: "District",
   },
   {
     id: "status",
@@ -179,7 +238,7 @@ function User() {
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const { token } = useAuth();
+  const { token, user: currentUserDetails } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
   const { getUserPermissions } = useUserPermission();
@@ -204,7 +263,7 @@ function User() {
 
       if (response.data.status !== "SUCCESS") return;
 
-      const tableFormattedData = response.data.data.roles.map((obj) => {
+      const tableFormattedData = response.data.data.map((obj) => {
         const CreatedDay = new Date(obj.created_on).getDate();
         const CreatedMonth = new Date(obj.created_on).getMonth() + 1;
         const CreatedMonthName = getMonthName(CreatedMonth);
@@ -216,11 +275,15 @@ function User() {
         const UpdatedYear = new Date(obj.updated_on).getFullYear();
 
         return {
-          id: obj.role_id,
-          name: obj.role_name,
+          id: obj.emp_id,
+          emp_code: obj.emp_code,
+          display_name: obj.display_name,
+          first_name: obj.first_name,
+          last_name: obj.last_name,
+          email_id: obj.email_id,
+          phone_num: obj.phone_num,
+          district_name: obj.district.district_name,
           status: obj.is_active,
-          created: `${CreatedMonthName} ${CreatedDay}, ${CreatedYear}`,
-          updated: `${UpdatedMonthName} ${UpdatedDay}, ${UpdatedYear}`,
         };
       });
 
@@ -242,6 +305,30 @@ function User() {
       navigate("/login");
     }
   }, [token]);
+
+  const updateCellData = useCallback(
+    async ({ id = null, data = {} }) => {
+      const updatedData = { ...data };
+      updatedData.emp_id = currentUserDetails.emp_id;
+      delete updatedData.id;
+
+      try {
+        const response = await saveDataIngestion({
+          url: `${updateURL}/${id}`,
+          method: "put",
+          data: updatedData,
+        });
+
+        if (response.data.status !== "SUCCESS") return;
+
+        return;
+      } catch (error) {
+        console.log({ error });
+        return;
+      }
+    },
+    [currentUserDetails, saveDataIngestion, updateURL]
+  );
 
   return (
     <>
@@ -270,6 +357,8 @@ function User() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
+              updateCellData={updateCellData}
+              deleteURL={deleteURL}
             />
           )}
         </>

@@ -519,7 +519,7 @@ export default function AdvancedTable({
                                 <TableCell>
                                   <Tooltip title="edit">
                                     <IconButton
-                                      size="medium"
+                                      size="small"
                                       onClick={() => startEditing(i, row)}
                                     >
                                       <EditIcon />
@@ -535,7 +535,7 @@ export default function AdvancedTable({
                               <TableCell>
                                 <Tooltip title="view more">
                                   <IconButton
-                                    size="medium"
+                                    size="small"
                                     onClick={showMoreData}
                                   >
                                     <MoreHorizIcon />
