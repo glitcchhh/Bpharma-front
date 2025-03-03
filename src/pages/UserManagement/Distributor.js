@@ -96,14 +96,30 @@ const AddNewUserData = [
   {
     name: "distributor_name",
     label: "Distributor Name",
+    type: "select",
+    options: [
+      { value: "product 1", name: "product 1" },
+      { value: "product 2", name: "product 2" },
+      { value: "product 3", name: "product 3" },
+    ],
   },
   {
     name: "distributor_code",
     label: "Distributor Code",
   },
   {
+    name: "tsm_name",
+    label: "TSM Name",
+  },
+  {
     name: "distributor_district_id",
     label: "Distributor District ID",
+    type: "select",
+    options: [
+      { value: 1, name: "district 1" },
+      { value: 2, name: "district 2" },
+      { value: 3, name: "district 3" },
+    ],
   },
   {
     name: "distr_email",
@@ -127,11 +143,11 @@ const AddNewUserData = [
   },
 ];
 
-function DistributorManagementModal() {
+function Distributor() {
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const { token } = useAuth();
+  const { token, user: currentUserDetails } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
   const { getUserPermissions } = useUserPermission();
@@ -177,7 +193,7 @@ function DistributorManagementModal() {
       console.log({ error });
       return;
     }
-  }, []);
+  }, [setData, saveDataIngestion, listURL]);
 
   useEffect(() => {
     if (token) {
@@ -187,28 +203,29 @@ function DistributorManagementModal() {
     }
   }, [token]);
 
-  const updateCellData = useCallback(async ({ id = null, data = {} }) => {
-    const updatedData = { ...data };
-    updatedData.emp_id = data.id;
-    delete updatedData.id;
+  const updateCellData = useCallback(
+    async ({ id = null, data = {} }) => {
+      const updatedData = { ...data };
+      updatedData.emp_id = currentUserDetails.emp_id;
+      delete updatedData.id;
 
-    try {
-      const response = await saveDataIngestion({
-        url: `${updateURL}/${id}`,
-        method: "put",
-        data: updatedData,
-      });
+      try {
+        const response = await saveDataIngestion({
+          url: `${updateURL}/${id}`,
+          method: "put",
+          data: updatedData,
+        });
 
-      if (response.data.status !== "SUCCESS") return;
+        if (response.data.status !== "SUCCESS") return;
 
-      window.location.reload();
-
-      return;
-    } catch (error) {
-      console.log({ error });
-      return;
-    }
-  });
+        return;
+      } catch (error) {
+        console.log({ error });
+        return;
+      }
+    },
+    [currentUserDetails, saveDataIngestion, updateURL]
+  );
 
   return (
     <>
@@ -246,4 +263,4 @@ function DistributorManagementModal() {
   );
 }
 
-export default DistributorManagementModal;
+export default Distributor;

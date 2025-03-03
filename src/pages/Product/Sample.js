@@ -15,6 +15,7 @@ import { useUserPermission } from "../../hooks/useUserPermissions";
 
 // define URLs here
 const listURL = "api/list-sample";
+const insertURL = "api/insert-sample";
 
 // make sure data passed to table have same id as modalTableHeadCells passed to its table
 const modalTableHeadCells = [
@@ -40,11 +41,6 @@ const modalTableHeadCells = [
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
-  },
-  {
-    id: "req_date",
-    disablePadding: false,
-    label: "Request Date",
   },
   {
     id: "remarks",
@@ -79,31 +75,22 @@ const headCells = [
     label: "Quantity",
   },
   {
-    id: "req_date",
-    disablePadding: false,
-    label: "Request Date",
-  },
-  {
     id: "remarks",
     disablePadding: false,
     label: "Remarks",
-  },
-  {
-    id: "more",
-    disablePadding: false,
-    label: "More",
-    notSortable: true,
   },
 ];
 
 const AddNewUserData = [
   {
-    name: "product_id",
-    label: "Product ID",
-  },
-  {
-    name: "requested_emp_id",
-    label: "Employee ID",
+    name: "product_name",
+    label: "Product Name",
+    type: "select",
+    options: [
+      { value: 1, name: "product 1" },
+      { value: 2, name: "product 2" },
+      { value: 3, name: "product 3" },
+    ],
   },
   {
     name: "total_qty",
@@ -117,10 +104,6 @@ const AddNewUserData = [
   {
     name: "customer_name",
     label: "Customer Name",
-  },
-  {
-    name: "status",
-    label: "Status",
   },
   {
     name: "remarks",
@@ -210,7 +193,7 @@ function Sample() {
           data={AddNewUserData}
           title="Add New Sample"
           buttonLabel="New Sample"
-          url="/api/insert-sample"
+          url={insertURL}
         />
       )}
 

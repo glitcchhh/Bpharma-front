@@ -11,6 +11,7 @@ import { getMonthName } from "../../constants/Constants";
 
 //define URLs here
 const listURL = "api/list-claim";
+const insertURL = "/api/insert-claim";
 
 const modalTableHeadCells = [
   {
@@ -83,12 +84,14 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "distributor_id",
-    label: "Distributor ID",
-  },
-  {
-    name: "requested_emp_id",
-    label: "Requested Employee ID",
+    name: "distributor_name",
+    label: "Distributor Name",
+    type: "select",
+    options: [
+      { value: 1, name: "distributor 1" },
+      { value: 2, name: "distributor 2" },
+      { value: 3, name: "distributor 3" },
+    ],
   },
   {
     name: "requested_date",
@@ -113,9 +116,17 @@ function Claim() {
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const { token } = useAuth();
+  const { token, user: currentDetails } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
+  const currentUser = currentDetails.user;
+  useEffect(() => {
+    if (currentUser && currentUser == "tsm") {
+      const index = headCells.findIndex(({ id }) => id == "more");
+
+      if (index !== -1) headCells.splice(index, 1);
+    }
+  }, [currentUser]);
 
   const { getUserPermissions } = useUserPermission();
 
@@ -191,7 +202,7 @@ function Claim() {
           data={AddNewUserData}
           title="Add New Claim"
           buttonLabel="New Claim"
-          url="/api/insert-claim"
+          url={insertURL}
         />
       )}
 

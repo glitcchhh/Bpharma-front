@@ -23,12 +23,13 @@ const DistributorManagement = React.lazy(() =>
 );
 
 const Attach = React.lazy(() => import("./pages/UserManagement/Attach"));
+const Product = React.lazy(() => import("./pages/UserManagement/Product"));
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Login = React.lazy(() => import("./pages/Login"));
 const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
 const Claim = React.lazy(() => import("./pages/Product/Claim"));
-const Offer = React.lazy(() => import("./pages/Product/Offer"));
+const Offer = React.lazy(() => import("./pages/Product/OfferPage"));
 const Expiry = React.lazy(() => import("./pages/Product/Expiry"));
 const NearExpiry = React.lazy(() => import("./pages/Product/NearExpiry"));
 const Compliments = React.lazy(() => import("./pages/Product/Compliments"));
@@ -157,6 +158,7 @@ function App() {
               <Route path="/product/near-expiry" element={<NearExpiry />} />
               <Route path="/product/compliments" element={<Compliments />} />
               <Route path="/management/attach" element={<Attach />} />
+              <Route path="/management/product" element={<Product />} />
               {/* Add more routes here */}
             </Routes>
           </Suspense>

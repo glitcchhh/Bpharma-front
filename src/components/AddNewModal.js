@@ -7,6 +7,10 @@ import {
   Box,
   IconButton,
   TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDataIngestion } from "../hooks/useDataIngestion";
@@ -26,16 +30,16 @@ const AddNewUserModal = ({
   const { saveDataIngestion } = useDataIngestion();
   const [error, setError] = useState(null);
   const { user } = useAuth();
+  const [selectedValue, setSelectedValues] = useState({});
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setSelectedValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const data = new FormData(event.target);
-    const formData = {};
-
-    data.forEach((value, key) => {
-      if (value != "") formData[key] = value;
-    });
+    const formData = { ...selectedValue };
 
     // formData.emp_id = user.emp_id;
     formData.emp_id = 2;
@@ -94,7 +98,7 @@ const AddNewUserModal = ({
           noValidate
           autoComplete="off"
         >
-          {data.map(({ name, label, type = "text" }, index) => {
+          {data.map(({ name, label, type = "text", options = [] }, index) => {
             const Error = showError(name);
 
             if (type == "textarea") {
@@ -111,6 +115,7 @@ const AddNewUserModal = ({
                     id={name + index}
                     autoComplete="off"
                     name={name}
+                    onChange={handleChange}
                   />
                   {Error && (
                     <>
@@ -141,9 +146,34 @@ const AddNewUserModal = ({
                               fullWidth: true,
                             },
                           }}
+                          onChange={handleChange}
                         />
                       </DemoContainer>
                     </LocalizationProvider>
+                  </div>
+                  {Error && <div className="error-msg">{Error?.message}</div>}
+                </Fragment>
+              );
+            }
+
+            if (type == "select") {
+              return (
+                <Fragment key={index}>
+                  <div>
+                    <FormControl fullWidth size="small" sx={{ mt: "5px" }}>
+                      <InputLabel id={"product-select"}>{label}</InputLabel>
+                      <Select
+                        labelId={"product-select"}
+                        id="product-select-select"
+                        label={label}
+                        name={name}
+                        onChange={handleChange}
+                      >
+                        {options.map(({ value, name }) => {
+                          return <MenuItem value={value}>{name}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
                   </div>
                   {Error && <div className="error-msg">{Error?.message}</div>}
                 </Fragment>
@@ -162,6 +192,7 @@ const AddNewUserModal = ({
                   autoComplete="off"
                   size="small"
                   name={name}
+                  onChange={handleChange}
                 />
                 {Error && (
                   <>

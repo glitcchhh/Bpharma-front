@@ -11,8 +11,8 @@ export const useUserPermission = () => {
   const getUserPermissions = useCallback(
     ({ permissionType = "", currentPath = null || path }) => {
       const permission = userPermissions
-        .find((_) => _.user == userType)
-        .permissions.find((perm) => perm.path == currentPath);
+        ?.find((_) => _.user == userType)
+        ?.permissions?.find((perm) => perm.path == currentPath);
 
       if (permission?.hasOwnProperty("path")) {
         return permission[currentPath][permissionType];

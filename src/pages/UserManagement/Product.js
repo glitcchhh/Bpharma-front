@@ -1,50 +1,53 @@
-// src/pages/Product/claim.js
+// src/pages/DistributorManagement.js
 import React, { useCallback, useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthProvider";
-import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useNavigate } from "react-router-dom";
+import { useDataIngestion } from "../../hooks/useDataIngestion";
+import { useAuth } from "../../contexts/AuthProvider";
 import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
-import { getMonthName } from "../../constants/Constants";
 
 // define URLs here
-const listURL = "api/list-offer";
+const listURL = "api/list-product";
+const updateURL = "api/update-product";
+const insertURL = "api/insert-product";
+const deleteURL = "";
 
 const modalTableHeadCells = [
   {
     id: "id",
   },
   {
-    id: "request_number",
+    id: "number",
     disablePadding: false,
-    label: "Request No.",
+    label: "No.",
   },
+
   {
     id: "product_name",
     disablePadding: false,
-    label: "Product",
+    label: "Product Name",
   },
   {
-    id: "customer_name",
+    id: "batch_no",
     disablePadding: false,
-    label: "Customer",
+    label: "Batch No.",
   },
   {
-    id: "location",
+    id: "product_code",
     disablePadding: false,
-    label: "Location",
+    label: "Code",
   },
   {
-    id: "quantity",
+    id: "packing",
     disablePadding: false,
-    label: "Quantity",
+    label: "Packing",
   },
   {
-    id: "offer",
+    id: "status",
     disablePadding: false,
-    label: "Offer",
+    label: "Near Expiry",
   },
 ];
 
@@ -54,82 +57,102 @@ const headCells = [
     id: "id",
   },
   {
-    id: "request_number",
+    id: "number",
     disablePadding: false,
-    label: "Request No.",
+    label: "No.",
   },
+
   {
     id: "product_name",
     disablePadding: false,
-    label: "Product",
+    label: "Product Name",
   },
   {
-    id: "customer_name",
+    id: "batch_no",
     disablePadding: false,
-    label: "Customer",
+    label: "Batch No.",
   },
   {
-    id: "location",
+    id: "product_code",
     disablePadding: false,
-    label: "Location",
+    label: "Code",
   },
   {
-    id: "quantity",
+    id: "packing",
     disablePadding: false,
-    label: "Quantity",
+    label: "Packing",
   },
   {
-    id: "offer",
+    id: "status",
     disablePadding: false,
-    label: "Offer",
+    label: "Near Expiry",
   },
   {
-    id: "more",
+    id: "edit",
     disablePadding: false,
-    label: "More",
+    label: "Edit",
     notSortable: true,
   },
 ];
 
 const AddNewUserData = [
   {
-    name: "product_id",
-    label: "Product ID",
-  },
-  {
-    name: "requested_emp_id",
-    label: "Employee ID",
-  },
-  {
     name: "product_name",
     label: "Product Name",
+    type: "select",
+    options: [
+      { value: 1, name: "product 1" },
+      { value: 2, name: "product 2" },
+      { value: 3, name: "product 3" },
+    ],
   },
   {
-    name: "customer_name",
-    label: "Customer Name",
+    name: "product_code",
+    label: "Code",
   },
   {
-    name: "location",
-    label: "Location",
+    name: "ts_name",
+    label: "TSM Name",
   },
   {
-    name: "quantity",
-    label: "Quantity",
+    name: "distributor_district_id",
+    label: "Distributor District ID",
+    type: "select",
+    options: [
+      { value: 1, name: "district 1" },
+      { value: 2, name: "district 2" },
+      { value: 3, name: "district 3" },
+    ],
   },
   {
-    name: "offer",
-    label: "Offer Quantity",
+    name: "distr_email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    name: "distr_phone_number",
+    label: "Phone",
+    type: "tel",
+  },
+  {
+    name: "address_1",
+    label: "Address 1",
+    type: "textarea",
+  },
+  {
+    name: "address_2",
+    label: "Address 2",
+    type: "textarea",
   },
 ];
 
-function Offer() {
+function Product() {
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
   const navigate = useNavigate();
-
   const { getUserPermissions } = useUserPermission();
 
   const createUserPermission = getUserPermissions({
@@ -153,21 +176,14 @@ function Offer() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
-        const Day = new Date(obj.requested_date).getDate();
-        const Month = new Date(obj.requested_date).getMonth() + 1;
-        const Year = new Date(obj.requested_date).getFullYear();
-        const MonthName = getMonthName(Month);
-        const formattedMonth = Month.toString().padStart(2, "0");
-        const requestNumber = `PO/${obj.offer_id}/${Year}-${formattedMonth}`;
-
         return {
-          id: obj.offer_id,
-          request_number: requestNumber,
-          product_name: obj.product.product_name,
-          customer_name: obj.customer_name,
-          location: obj.location,
-          quantity: obj.qty,
-          offer: obj.offer_qty,
+          id: obj.product_id,
+          number: obj.product_id,
+          product_name: obj.product_name,
+          batch_no: obj.batch_no,
+          product_code: obj.product_code,
+          status: obj.near_expiry,
+          packing: obj.packing,
         };
       });
 
@@ -190,6 +206,33 @@ function Offer() {
     }
   }, [token]);
 
+  const updateCellData = useCallback(
+    async ({ id = null, data = {} }) => {
+      const updatedData = { ...data };
+      // updatedData.emp_id = data.id;
+      delete updatedData.id;
+      delete updatedData.number;
+      delete updatedData.status;
+
+      try {
+        const response = await saveDataIngestion({
+          url: `${updateURL}/${id}`,
+          method: "put",
+          data: updatedData,
+        });
+
+        if (response.data.status !== "SUCCESS") return;
+        window.location.reload();
+
+        return;
+      } catch (error) {
+        console.log({ error });
+        return;
+      }
+    },
+    [saveDataIngestion, updateURL]
+  );
+
   return (
     <>
       <TableModal
@@ -202,8 +245,9 @@ function Offer() {
       {createUserPermission && (
         <AddNewUser
           data={AddNewUserData}
-          title="Add New Claim"
-          buttonLabel="New Claim"
+          title="Add New Product"
+          buttonLabel="New Product"
+          url={insertURL}
         />
       )}
 
@@ -215,6 +259,8 @@ function Offer() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
+              updateCellData={updateCellData}
+              deleteURL={deleteURL}
             />
           )}
         </>
@@ -223,4 +269,4 @@ function Offer() {
   );
 }
 
-export default Offer;
+export default Product;

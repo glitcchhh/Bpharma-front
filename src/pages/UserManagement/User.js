@@ -37,16 +37,6 @@ const modalTableHeadCells = [
     label: "User",
   },
   {
-    id: "created",
-    disablePadding: false,
-    label: "Created on",
-  },
-  {
-    id: "updated",
-    disablePadding: false,
-    label: "Updated on",
-  },
-  {
     id: "status",
     disablePadding: false,
     label: "Status",
@@ -62,16 +52,6 @@ const headCells = [
     id: "name",
     disablePadding: false,
     label: "User",
-  },
-  {
-    id: "created",
-    disablePadding: false,
-    label: "Created on",
-  },
-  {
-    id: "updated",
-    disablePadding: false,
-    label: "Updated on",
   },
   {
     id: "status",

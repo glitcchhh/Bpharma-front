@@ -1,17 +1,17 @@
-// src/pages/Product/offer.js
+// src/pages/Product/claim.js
 import React, { useCallback, useEffect, useState } from "react";
-import { useDataIngestion } from "../../hooks/useDataIngestion";
-import AdvancedTable from "../../components/AdvancedTable";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
+import { useDataIngestion } from "../../hooks/useDataIngestion";
+import { useNavigate } from "react-router-dom";
+import AdvancedTable from "../../components/AdvancedTable";
 import AddNewUser from "../../components/AddNewUser";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 import { getMonthName } from "../../constants/Constants";
 
-//define URLs here
-const listURL = "api/list-expiry";
-const insertURL = "/api/insert-expiry";
+// define URLs here
+const listURL = "api/list-offer";
+const insertURL = "/api/insert-offer";
 
 const modalTableHeadCells = [
   {
@@ -33,14 +33,19 @@ const modalTableHeadCells = [
     label: "Customer",
   },
   {
+    id: "location",
+    disablePadding: false,
+    label: "Location",
+  },
+  {
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
   },
   {
-    id: "remarks",
+    id: "offer",
     disablePadding: false,
-    label: "Remarks",
+    label: "Offer",
   },
 ];
 
@@ -65,14 +70,19 @@ const headCells = [
     label: "Customer",
   },
   {
+    id: "location",
+    disablePadding: false,
+    label: "Location",
+  },
+  {
     id: "quantity",
     disablePadding: false,
     label: "Quantity",
   },
   {
-    id: "remarks",
+    id: "offer",
     disablePadding: false,
-    label: "Remarks",
+    label: "Offer",
   },
 ];
 
@@ -92,23 +102,22 @@ const AddNewUserData = [
     label: "Customer Name",
   },
   {
-    name: "total_qty",
+    name: "location",
+    label: "Location",
+  },
+  {
+    name: "quantity",
     label: "Quantity",
   },
   {
-    name: "expairy_req_date",
-    label: "Request Date",
-    type: "date",
-  },
-  {
-    name: "remarks",
-    label: "Remarks",
-    type: "textarea",
+    name: "offer",
+    label: "Offer Quantity",
   },
 ];
 
-function Expiry() {
+function Offer() {
   const [open, setOpen] = useState(false);
+
   const [data, setData] = useState([]);
   const { token } = useAuth();
   const { saveDataIngestion, isLoading } = useDataIngestion();
@@ -137,22 +146,21 @@ function Expiry() {
       if (response.data.status !== "SUCCESS") return;
 
       const tableFormattedData = response.data.data.map((obj) => {
-        const Day = new Date(obj.expairy_req_date).getDate();
-        const Month = new Date(obj.expairy_req_date).getMonth() + 1;
-        const Year = new Date(obj.expairy_req_date).getFullYear();
+        const Day = new Date(obj.requested_date).getDate();
+        const Month = new Date(obj.requested_date).getMonth() + 1;
+        const Year = new Date(obj.requested_date).getFullYear();
         const MonthName = getMonthName(Month);
         const formattedMonth = Month.toString().padStart(2, "0");
-        const requestNumber = `ER/${obj.expairy_req_id}/${Year}-${formattedMonth}`;
-        const requestDate = `${MonthName} ${Day}, ${Year}`;
+        const requestNumber = `PO/${obj.offer_id}/${Year}-${formattedMonth}`;
 
         return {
-          id: obj.expairy_req_id,
+          id: obj.offer_id,
           request_number: requestNumber,
           product_name: obj.product.product_name,
           customer_name: obj.customer_name,
-          quantity: obj.total_qty,
-          req_date: requestDate,
-          remarks: obj.remarks,
+          location: obj.location,
+          quantity: obj.qty,
+          offer: obj.offer_qty,
         };
       });
 
@@ -187,8 +195,8 @@ function Expiry() {
       {createUserPermission && (
         <AddNewUser
           data={AddNewUserData}
-          title="Add New Expiry"
-          buttonLabel="New Expiry"
+          title="Add New Offer"
+          buttonLabel="New Offer"
           url={insertURL}
         />
       )}
@@ -209,4 +217,4 @@ function Expiry() {
   );
 }
 
-export default Expiry;
+export default Offer;

@@ -31,6 +31,7 @@ export default function Login() {
     setToken("");
     sessionStorage.removeItem("site");
     localStorage.removeItem("site");
+    localStorage.removeItem("user");
   }, []);
 
   const handleSubmit = async (event) => {
