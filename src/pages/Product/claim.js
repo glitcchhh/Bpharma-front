@@ -79,6 +79,7 @@ const headCells = [
     disablePadding: false,
     label: "More",
     notSortable: true,
+    fixedWidth: true,
   },
 ];
 

@@ -81,6 +81,7 @@ function EnhancedTableHead(props) {
         key={headCell.id}
         align="left"
         padding={headCell.disablePadding ? "none" : "normal"}
+        width={headCell.fixedWidth ? "50px" : "auto"}
         sortDirection={orderBy === headCell.id ? order : false}
         sx={{
           fontWeight: 600,

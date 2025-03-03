@@ -26,6 +26,7 @@ const AddNewUserModal = ({
   title = "Add New User",
   data = [],
   url = "/employee/create",
+  needEmployeeID = true,
 }) => {
   const { saveDataIngestion } = useDataIngestion();
   const [error, setError] = useState(null);
@@ -42,7 +43,7 @@ const AddNewUserModal = ({
     const formData = { ...selectedValue };
 
     // formData.emp_id = user.emp_id;
-    formData.emp_id = 2;
+    if (needEmployeeID) formData.emp_id = 2;
 
     try {
       // Send POST request

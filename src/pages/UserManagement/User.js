@@ -26,6 +26,7 @@ import { useUserPermission } from "../../hooks/useUserPermissions";
 const listURL = "api/list-roles";
 const updateURL = "api/update-roles";
 const deleteURL = "api/delete-roles";
+const insertURL = "api/insert-employee";
 
 const modalTableHeadCells = [
   {
@@ -35,11 +36,13 @@ const modalTableHeadCells = [
     id: "name",
     disablePadding: false,
     label: "User",
+    fixedWidth: true,
   },
   {
     id: "status",
     disablePadding: false,
     label: "Status",
+    fixedWidth: true,
   },
 ];
 
@@ -57,38 +60,118 @@ const headCells = [
     id: "status",
     disablePadding: false,
     label: "Status",
+    fixedWidth: true,
   },
   {
     id: "edit",
     disablePadding: false,
     label: "Edit",
     notSortable: true,
+    fixedWidth: true,
   },
 ];
 
 const AddNewUserData = [
   {
-    name: "user-code",
+    name: "display_name",
+    label: "Display name",
+  },
+  {
+    name: "emp_code",
     label: "User Code",
   },
   {
-    name: "name",
-    label: "User Name",
+    name: "first_name",
+    label: "First Name",
   },
   {
-    name: "email",
+    name: "last_name",
+    label: "Last Name",
+  },
+  {
+    name: "email_id",
     label: "Email",
     type: "email",
   },
   {
-    name: "password",
-    label: "Password",
-    type: "password",
-  },
-  {
-    name: "phone",
+    name: "phone_num",
     label: "Phone",
     type: "tel",
+  },
+  {
+    name: "district_id",
+    label: "District ID",
+    type: "select",
+    options: [
+      {
+        name: "district 1",
+        value: "1",
+      },
+      {
+        name: "district 2",
+        value: "2",
+      },
+    ],
+  },
+  {
+    name: "distributer_id",
+    label: "Distributor Name",
+    type: "select",
+    options: [
+      {
+        name: "Distributor name 1",
+        value: "1",
+      },
+      {
+        name: "Distributor name 2",
+        value: "2",
+      },
+    ],
+  },
+  {
+    name: "is_active",
+    label: "Active",
+    type: "select",
+    options: [
+      {
+        name: "Active",
+        value: "0",
+      },
+      {
+        name: "InActive",
+        value: "1",
+      },
+    ],
+  },
+  {
+    name: "status_id",
+    label: "Status",
+    type: "select",
+    options: [
+      {
+        name: "Pending",
+        value: "1",
+      },
+    ],
+  },
+  {
+    name: "role_id",
+    label: "Role ID",
+    type: "select",
+    options: [
+      {
+        name: "1",
+        value: "1",
+      },
+      {
+        name: "2",
+        value: "2",
+      },
+      {
+        name: "3",
+        value: "3",
+      },
+    ],
   },
 ];
 
@@ -174,6 +257,8 @@ function User() {
           data={AddNewUserData}
           title="Add New User"
           buttonLabel="New User"
+          url={insertURL}
+          needEmployeeID={false}
         />
       )}
 

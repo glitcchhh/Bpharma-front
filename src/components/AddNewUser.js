@@ -8,6 +8,7 @@ const AddNewUser = ({
   title = "",
   data = [],
   url,
+  needEmployeeID,
 }) => {
   const [openAddUserModal, setOpenAddUserModal] = useState(false);
 
@@ -49,6 +50,7 @@ const AddNewUser = ({
         handleClose={handleCloseAddUserModal}
         data={data}
         url={url}
+        needEmployeeID={needEmployeeID}
       />
     </>
   );
