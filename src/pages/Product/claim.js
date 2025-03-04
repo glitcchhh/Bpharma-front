@@ -12,6 +12,7 @@ import { getMonthName } from "../../constants/Constants";
 //define URLs here
 const listURL = "api/list-claim";
 const insertURL = "/api/insert-claim";
+const distributorURL = "/api/list-distributor";
 
 const modalTableHeadCells = [
   {
@@ -88,7 +89,6 @@ const AddNewUserData = [
     name: "distributor_id",
     label: "Distributor Name",
     type: "select",
-    options: [{ value: 1, name: "distributor 1" }],
   },
   {
     name: "requested_date",
@@ -177,9 +177,39 @@ function Claim() {
     }
   }, []);
 
+  const fetchDistributor = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: distributorURL,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const Options = response.data.data.distributors.map((obj) => {
+        return {
+          value: obj.distributor_id,
+          name: obj.distributor_name,
+        };
+      });
+
+      // adding options to distributor_id
+      AddNewUserData.forEach((item) => {
+        if (item.name === "distributor_id") {
+          item.options = Options;
+        }
+      });
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     if (token) {
       fetchData();
+      fetchDistributor();
     } else {
       navigate("/login");
     }

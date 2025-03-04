@@ -12,6 +12,7 @@ import { getMonthName } from "../../constants/Constants";
 // define URLs here
 const listURL = "api/list-offer";
 const insertURL = "/api/insert-offer";
+const productURL = "/api/list-product";
 
 const modalTableHeadCells = [
   {
@@ -91,11 +92,6 @@ const AddNewUserData = [
     name: "product_id",
     label: "Product Name",
     type: "select",
-    options: [
-      { value: 1, name: "product 1" },
-      { value: 2, name: "product 2" },
-      { value: 3, name: "product 3" },
-    ],
   },
   {
     name: "customer_name",
@@ -175,9 +171,39 @@ function Offer() {
     }
   }, []);
 
+  const fetchDistributor = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: productURL,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const Options = response.data.data.map((obj) => {
+        return {
+          value: obj.product_id,
+          name: obj.product_name,
+        };
+      });
+
+      // adding options to distributor_id
+      AddNewUserData.forEach((item) => {
+        if (item.name === "product_id") {
+          item.options = Options;
+        }
+      });
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     if (token) {
       fetchData();
+      fetchDistributor();
     } else {
       navigate("/login");
     }

@@ -16,6 +16,7 @@ import { useUserPermission } from "../../hooks/useUserPermissions";
 // define URLs here
 const listURL = "api/list-sample";
 const insertURL = "api/insert-sample";
+const productURL = "/api/list-product";
 
 // make sure data passed to table have same id as modalTableHeadCells passed to its table
 const modalTableHeadCells = [
@@ -86,7 +87,6 @@ const AddNewUserData = [
     name: "product_id",
     label: "Product Name",
     type: "select",
-    options: [{ value: 1, name: "product 1" }],
   },
   {
     name: "total_qty",
@@ -167,9 +167,39 @@ function Sample() {
     }
   }, []);
 
+  const fetchDistributor = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: productURL,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const Options = response.data.data.map((obj) => {
+        return {
+          value: obj.product_id,
+          name: obj.product_name,
+        };
+      });
+
+      // adding options to distributor_id
+      AddNewUserData.forEach((item) => {
+        if (item.name === "product_id") {
+          item.options = Options;
+        }
+      });
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     if (token) {
       fetchData();
+      fetchDistributor();
     } else {
       navigate("/login");
     }

@@ -93,6 +93,11 @@ const AddNewUserModal = ({
       formData.status = "1";
     }
 
+    if (pathname == "/product/expiry") {
+      formData.requested_emp_id = 2;
+      formData.status = "1";
+    }
+
     // formData.emp_id = user.emp_id;
     if (needEmployeeID) formData.emp_id = 2;
 
