@@ -70,6 +70,29 @@ const AddNewUserModal = ({
       delete formData.tsm_name;
     }
 
+    if (pathname == "/product/claim") {
+      formData.requested_emp_id = 2;
+      formData.distributor_id = 1;
+      delete formData.stockist;
+      delete formData.total_qty;
+      delete formData.free_qty;
+    }
+
+    if (pathname == "/product/offer") {
+      const Day = new Date().getDate();
+      const Month = new Date().getMonth() + 1;
+      const Year = new Date().getFullYear();
+
+      formData.requested_emp_id = 2;
+      formData.status_id = "1";
+      formData.requested_date = `${Year}-${Month}-${Day}`;
+    }
+
+    if (pathname == "/product/sample") {
+      formData.requested_emp_id = 2;
+      formData.status = "1";
+    }
+
     // formData.emp_id = user.emp_id;
     if (needEmployeeID) formData.emp_id = 2;
 

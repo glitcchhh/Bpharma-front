@@ -57,8 +57,8 @@ export default function Login() {
       const user = response.data.data.userData;
       const auth_token = response.data.data.auth_token;
 
-      // user.user = "tsm";
-      user.user = "super-admin";
+      user.user = "tsm";
+      // user.user = "super-admin";
 
       setUser(user);
       setToken(auth_token);

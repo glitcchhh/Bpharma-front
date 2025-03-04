@@ -85,14 +85,10 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "distributor_name",
+    name: "distributor_id",
     label: "Distributor Name",
     type: "select",
-    options: [
-      { value: 1, name: "distributor 1" },
-      { value: 2, name: "distributor 2" },
-      { value: 3, name: "distributor 3" },
-    ],
+    options: [{ value: 1, name: "distributor 1" }],
   },
   {
     name: "requested_date",
@@ -204,6 +200,7 @@ function Claim() {
           title="Add New Claim"
           buttonLabel="New Claim"
           url={insertURL}
+          needEmployeeID={false}
         />
       )}
 

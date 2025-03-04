@@ -83,14 +83,10 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "product_name",
+    name: "product_id",
     label: "Product Name",
     type: "select",
-    options: [
-      { value: 1, name: "product 1" },
-      { value: 2, name: "product 2" },
-      { value: 3, name: "product 3" },
-    ],
+    options: [{ value: 1, name: "product 1" }],
   },
   {
     name: "total_qty",
@@ -194,6 +190,7 @@ function Sample() {
           title="Add New Sample"
           buttonLabel="New Sample"
           url={insertURL}
+          needEmployeeID={false}
         />
       )}
 

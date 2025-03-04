@@ -88,7 +88,7 @@ const headCells = [
 
 const AddNewUserData = [
   {
-    name: "product_name",
+    name: "product_id",
     label: "Product Name",
     type: "select",
     options: [
@@ -102,15 +102,15 @@ const AddNewUserData = [
     label: "Customer Name",
   },
   {
-    name: "location",
+    name: "customer_location",
     label: "Location",
   },
   {
-    name: "quantity",
+    name: "qty",
     label: "Quantity",
   },
   {
-    name: "offer",
+    name: "offer_qty",
     label: "Offer Quantity",
   },
 ];
@@ -198,6 +198,7 @@ function Offer() {
           title="Add New Offer"
           buttonLabel="New Offer"
           url={insertURL}
+          needEmployeeID={false}
         />
       )}
 
