@@ -12,6 +12,7 @@ import { useUserPermission } from "../../hooks/useUserPermissions";
 const listURL = "api/list-distributor";
 const updateURL = "api/update-distributor";
 const deleteURL = "api/delete-distributor";
+const tsmURL = "api/list-employee";
 
 const modalTableHeadCells = [
   {
@@ -106,11 +107,6 @@ const AddNewUserData = [
     name: "tsm_name",
     label: "TSM Name",
     type: "select",
-    options: [
-      { value: "TSM 1", name: "TSM 1" },
-      { value: "TSM 2", name: "TSM 2" },
-      { value: "TSM 3", name: "TSM 3" },
-    ],
   },
   {
     name: "distributor_district_id",
@@ -192,9 +188,39 @@ function Distributor() {
     }
   }, [setData, saveDataIngestion, listURL]);
 
+  const fetchDistributor = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: tsmURL,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const Options = response.data.data.map((obj) => {
+        return {
+          value: obj.emp_id,
+          name: obj.display_name,
+        };
+      });
+
+      // adding options to distributor_id
+      AddNewUserData.forEach((item) => {
+        if (item.name === "tsm_name") {
+          item.options = Options;
+        }
+      });
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     if (token) {
       fetchData();
+      fetchDistributor();
     } else {
       navigate("/login");
     }
