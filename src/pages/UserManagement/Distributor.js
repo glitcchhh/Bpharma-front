@@ -97,12 +97,6 @@ const AddNewUserData = [
   {
     name: "distributor_name",
     label: "Distributor Name",
-    type: "select",
-    options: [
-      { value: "product 1", name: "product 1" },
-      { value: "product 2", name: "product 2" },
-      { value: "product 3", name: "product 3" },
-    ],
   },
   {
     name: "distributor_code",
@@ -111,6 +105,12 @@ const AddNewUserData = [
   {
     name: "tsm_name",
     label: "TSM Name",
+    type: "select",
+    options: [
+      { value: "TSM 1", name: "TSM 1" },
+      { value: "TSM 2", name: "TSM 2" },
+      { value: "TSM 3", name: "TSM 3" },
+    ],
   },
   {
     name: "distributor_district_id",
@@ -207,7 +207,7 @@ function Distributor() {
   const updateCellData = useCallback(
     async ({ id = null, data = {} }) => {
       const updatedData = { ...data };
-      updatedData.emp_id = currentUserDetails.emp_id;
+      updatedData.emp_id = 2; //currentUserDetails.emp_id;
       delete updatedData.id;
 
       try {
@@ -218,6 +218,8 @@ function Distributor() {
         });
 
         if (response.data.status !== "SUCCESS") return;
+
+        window.location.reload();
 
         return;
       } catch (error) {

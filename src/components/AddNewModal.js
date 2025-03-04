@@ -19,6 +19,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useAuth } from "../contexts/AuthProvider";
+import { useLocation } from "react-router-dom";
 
 const AddNewUserModal = ({
   open,
@@ -32,15 +33,42 @@ const AddNewUserModal = ({
   const [error, setError] = useState(null);
   const { user } = useAuth();
   const [selectedValue, setSelectedValues] = useState({});
+  const { pathname } = useLocation();
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setSelectedValues((prevValues) => ({ ...prevValues, [name]: value }));
+    // console.log("event :: ", event);
+    // const { name, value } = event.target;
+    // setSelectedValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  const handleDateChange = (value, context) => {
+    // console.log("value :: ", value, context);
+    // console.log(
+    //   "value :: ",
+    //   `${value["$y"]}-${value["$M"] + 1}-${value["$D"]}`
+    // );
+    // const { name, value } = event.target;
+    // setSelectedValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = { ...selectedValue };
+    // const formData = { ...selectedValue };
+
+    const data = new FormData(event.target);
+    const formData = {};
+
+    data.forEach((value, key) => {
+      if (value != "") formData[key] = value;
+    });
+
+    if (pathname == "/management/product") {
+      formData.near_expiry = Math.floor(Math.random() * 2);
+    }
+
+    if (pathname == "/management/distributor") {
+      delete formData.tsm_name;
+    }
 
     // formData.emp_id = user.emp_id;
     if (needEmployeeID) formData.emp_id = 2;
@@ -147,7 +175,7 @@ const AddNewUserModal = ({
                               fullWidth: true,
                             },
                           }}
-                          onChange={handleChange}
+                          onChange={handleDateChange}
                         />
                       </DemoContainer>
                     </LocalizationProvider>

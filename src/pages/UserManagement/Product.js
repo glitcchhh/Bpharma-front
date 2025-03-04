@@ -102,48 +102,29 @@ const AddNewUserData = [
     label: "Product Name",
     type: "select",
     options: [
-      { value: 1, name: "product 1" },
-      { value: 2, name: "product 2" },
-      { value: 3, name: "product 3" },
+      { value: "Product 1", name: "product 1" },
+      { value: "Product 2", name: "product 2" },
+      { value: "Product 3", name: "product 3" },
     ],
   },
   {
     name: "product_code",
     label: "Code",
   },
+
   {
-    name: "ts_name",
-    label: "TSM Name",
+    name: "batch_no",
+    label: "Batch No.",
+  },
+
+  {
+    name: "near_expiry",
+    label: "Near Expiry Date",
+    type: "date",
   },
   {
-    name: "distributor_district_id",
-    label: "Distributor District ID",
-    type: "select",
-    options: [
-      { value: 1, name: "district 1" },
-      { value: 2, name: "district 2" },
-      { value: 3, name: "district 3" },
-    ],
-  },
-  {
-    name: "distr_email",
-    label: "Email",
-    type: "email",
-  },
-  {
-    name: "distr_phone_number",
-    label: "Phone",
-    type: "tel",
-  },
-  {
-    name: "address_1",
-    label: "Address 1",
-    type: "textarea",
-  },
-  {
-    name: "address_2",
-    label: "Address 2",
-    type: "textarea",
+    name: "packing",
+    label: "Packing",
   },
 ];
 
@@ -249,6 +230,7 @@ function Product() {
           title="Add New Product"
           buttonLabel="New Product"
           url={insertURL}
+          needEmployeeID={false}
         />
       )}
 
