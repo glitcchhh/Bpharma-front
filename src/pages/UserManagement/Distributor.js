@@ -105,22 +105,18 @@ const AddNewUserData = [
   {
     name: "tsm_name",
     label: "TSM Name",
-    type: "select",
-    options: [
-      { value: "TSM 1", name: "TSM 1" },
-      { value: "TSM 2", name: "TSM 2" },
-      { value: "TSM 3", name: "TSM 3" },
-    ],
+    // type: "select",
+    // options: [
+    //   { value: "TSM 1", name: "TSM 1" },
+    //   { value: "TSM 2", name: "TSM 2" },
+    //   { value: "TSM 3", name: "TSM 3" },
+    // ],
   },
   {
     name: "distributor_district_id",
     label: "Distributor District ID",
     type: "select",
-    options: [
-      { value: 1, name: "district 1" },
-      { value: 2, name: "district 2" },
-      { value: 3, name: "district 3" },
-    ],
+    options: [{ value: 1, name: "district 1" }],
   },
   {
     name: "distr_email",

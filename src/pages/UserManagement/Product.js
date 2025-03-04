@@ -100,12 +100,6 @@ const AddNewUserData = [
   {
     name: "product_name",
     label: "Product Name",
-    type: "select",
-    options: [
-      { value: "Product 1", name: "product 1" },
-      { value: "Product 2", name: "product 2" },
-      { value: "Product 3", name: "product 3" },
-    ],
   },
   {
     name: "product_code",
