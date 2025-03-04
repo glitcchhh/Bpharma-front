@@ -105,12 +105,12 @@ const AddNewUserData = [
   {
     name: "tsm_name",
     label: "TSM Name",
-    // type: "select",
-    // options: [
-    //   { value: "TSM 1", name: "TSM 1" },
-    //   { value: "TSM 2", name: "TSM 2" },
-    //   { value: "TSM 3", name: "TSM 3" },
-    // ],
+    type: "select",
+    options: [
+      { value: "TSM 1", name: "TSM 1" },
+      { value: "TSM 2", name: "TSM 2" },
+      { value: "TSM 3", name: "TSM 3" },
+    ],
   },
   {
     name: "distributor_district_id",
