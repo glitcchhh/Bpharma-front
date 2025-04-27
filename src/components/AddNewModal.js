@@ -62,6 +62,11 @@ const AddNewUserModal = ({
       if (value != "") formData[key] = value;
     });
 
+    if (pathname == "/management/user") {
+      formData.status_id = 1;
+      formData.role_id = 1;
+    }
+
     if (pathname == "/management/product") {
       formData.near_expiry = Math.floor(Math.random() * 2);
     }

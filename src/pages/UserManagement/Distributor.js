@@ -111,8 +111,8 @@ const AddNewUserData = [
   {
     name: "distributor_district_id",
     label: "Distributor District ID",
-    type: "select",
-    options: [{ value: 1, name: "district 1" }],
+    // type: "select",
+    // options: [{ value: 1, name: "district 1" }],
   },
   {
     name: "distr_email",
@@ -129,11 +129,11 @@ const AddNewUserData = [
     label: "Address 1",
     type: "textarea",
   },
-  {
-    name: "address_2",
-    label: "Address 2",
-    type: "textarea",
-  },
+  // {
+  //   name: "address_2",
+  //   label: "Address 2",
+  //   type: "textarea",
+  // },
 ];
 
 function Distributor() {
@@ -280,6 +280,7 @@ function Distributor() {
               headCells={headCells}
               updateCellData={updateCellData}
               deleteURL={deleteURL}
+              displayFilter={false}
             />
           )}
         </>

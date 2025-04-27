@@ -169,6 +169,7 @@ function EnhancedTableToolbar(props) {
     rejectAction = true,
     handleDeleteClick = () => {},
     tableHeading,
+    displayFilter,
   } = props;
 
   const { getUserPermissions } = useUserPermission();
@@ -248,7 +249,7 @@ function EnhancedTableToolbar(props) {
         </>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton onClick={openFilter}>
+          <IconButton onClick={openFilter} disabled={!displayFilter}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -272,6 +273,7 @@ export default function AdvancedTable({
   // update api call
   updateCellData = () => {},
   deleteURL = "",
+  displayFilter = true,
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -417,7 +419,7 @@ export default function AdvancedTable({
 
   return (
     <div className="custom-table">
-      <Filter open={showFilter} close={closeFilter} />
+      {displayFilter && <Filter open={showFilter} close={closeFilter} />}
 
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", boxShadow: "none" }}>
@@ -430,6 +432,7 @@ export default function AdvancedTable({
             rejectAction={rejectAction}
             handleDeleteClick={handleDeleteClick}
             tableHeading={tableHeading}
+            displayFilter={displayFilter}
           />
           <TableContainer sx={{ maxHeight: "400px", borderRadius: "5px" }}>
             <Table

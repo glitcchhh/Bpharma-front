@@ -27,6 +27,7 @@ const listURL = "api/list-employee";
 const updateURL = "api/update-employee";
 const deleteURL = "api/delete-employee";
 const insertURL = "api/insert-employee";
+const distributorURL = "api/list-distributor";
 
 const modalTableHeadCells = [
   {
@@ -160,32 +161,32 @@ const AddNewUserData = [
   {
     name: "district_id",
     label: "District ID",
-    type: "select",
-    options: [
-      {
-        name: "district 1",
-        value: "1",
-      },
-      {
-        name: "district 2",
-        value: "2",
-      },
-    ],
+    // type: "select",
+    // options: [
+    //   {
+    //     name: "district 1",
+    //     value: "1",
+    //   },
+    //   {
+    //     name: "district 2",
+    //     value: "2",
+    //   },
+    // ],
   },
   {
     name: "distributer_id",
     label: "Distributor Name",
     type: "select",
-    options: [
-      {
-        name: "Distributor name 1",
-        value: "1",
-      },
-      {
-        name: "Distributor name 2",
-        value: "2",
-      },
-    ],
+    // options: [
+    //   {
+    //     name: "Distributor name 1",
+    //     value: "1",
+    //   },
+    //   {
+    //     name: "Distributor name 2",
+    //     value: "2",
+    //   },
+    // ],
   },
   {
     name: "is_active",
@@ -202,36 +203,36 @@ const AddNewUserData = [
       },
     ],
   },
-  {
-    name: "status_id",
-    label: "Status",
-    type: "select",
-    options: [
-      {
-        name: "Pending",
-        value: "1",
-      },
-    ],
-  },
-  {
-    name: "role_id",
-    label: "Role ID",
-    type: "select",
-    options: [
-      {
-        name: "1",
-        value: "1",
-      },
-      {
-        name: "2",
-        value: "2",
-      },
-      {
-        name: "3",
-        value: "3",
-      },
-    ],
-  },
+  // {
+  //   name: "status_id",
+  //   label: "Status",
+  //   type: "select",
+  //   options: [
+  //     {
+  //       name: "Pending",
+  //       value: "1",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "role_id",
+  //   label: "Role ID",
+  //   type: "select",
+  //   options: [
+  //     {
+  //       name: "1",
+  //       value: "1",
+  //     },
+  //     {
+  //       name: "2",
+  //       value: "2",
+  //     },
+  //     {
+  //       name: "3",
+  //       value: "3",
+  //     },
+  //   ],
+  // },
 ];
 
 function User() {
@@ -298,9 +299,39 @@ function User() {
     }
   }, []);
 
+  const fetchDistributor = useCallback(async () => {
+    try {
+      const response = await saveDataIngestion({
+        url: distributorURL,
+      });
+
+      if (response.data.status !== "SUCCESS") return;
+
+      const Options = response.data.data.distributors.map((obj) => {
+        return {
+          value: obj.distributor_id,
+          name: obj.distributor_name,
+        };
+      });
+
+      // adding options to distributor_id
+      AddNewUserData.forEach((item) => {
+        if (item.name === "distributer_id") {
+          item.options = Options;
+        }
+      });
+
+      return;
+    } catch (error) {
+      console.log({ error });
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     if (token) {
       fetchData();
+      fetchDistributor();
     } else {
       navigate("/login");
     }
@@ -320,6 +351,8 @@ function User() {
         });
 
         if (response.data.status !== "SUCCESS") return;
+
+        window.location.reload();
 
         return;
       } catch (error) {
@@ -359,6 +392,9 @@ function User() {
               headCells={headCells}
               updateCellData={updateCellData}
               deleteURL={deleteURL}
+              displayFilter={false}
+              acceptAction={false}
+              rejectAction={false}
             />
           )}
         </>

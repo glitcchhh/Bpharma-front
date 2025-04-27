@@ -44,11 +44,11 @@ const modalTableHeadCells = [
     disablePadding: false,
     label: "Packing",
   },
-  {
-    id: "status",
-    disablePadding: false,
-    label: "Near Expiry",
-  },
+  // {
+  //   id: "status",
+  //   disablePadding: false,
+  //   label: "Near Expiry",
+  // },
 ];
 
 // make sure data passed to table have same id as headCells passed to its table
@@ -82,11 +82,11 @@ const headCells = [
     disablePadding: false,
     label: "Packing",
   },
-  {
-    id: "status",
-    disablePadding: false,
-    label: "Near Expiry",
-  },
+  // {
+  //   id: "status",
+  //   disablePadding: false,
+  //   label: "Near Expiry",
+  // },
   {
     id: "edit",
     disablePadding: false,
