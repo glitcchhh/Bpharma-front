@@ -172,7 +172,7 @@ function Product() {
       console.log({ error });
       return;
     }
-  }, []);
+  }, [setData, saveDataIngestion]);
 
   useEffect(() => {
     if (token) {
@@ -198,7 +198,7 @@ function Product() {
         });
 
         if (response.data.status !== "SUCCESS") return;
-        window.location.reload();
+        fetchData();
 
         return;
       } catch (error) {
@@ -225,6 +225,7 @@ function Product() {
           buttonLabel="New Product"
           url={insertURL}
           needEmployeeID={false}
+          fetchData={fetchData}
         />
       )}
 
@@ -238,6 +239,7 @@ function Product() {
               headCells={headCells}
               updateCellData={updateCellData}
               deleteURL={deleteURL}
+              fetchDataCallBack={fetchData}
             />
           )}
         </>

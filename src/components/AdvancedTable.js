@@ -34,10 +34,13 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useUserPermission } from "../hooks/useUserPermissions";
 import { useDataIngestion } from "../hooks/useDataIngestion";
+import { IsObjectEmpty } from "../utils";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -274,6 +277,7 @@ export default function AdvancedTable({
   updateCellData = () => {},
   deleteURL = "",
   displayFilter = true,
+  fetchDataCallBack = () => {},
 }) {
   const rows = data;
   const [showFilter, setShowFilter] = React.useState(false);
@@ -287,6 +291,7 @@ export default function AdvancedTable({
   const [editValues, setEditValues] = useState({});
   const [deleteIdx, setDeleteIdx] = useState(null);
   const [openDeletePopOver, setOpenDeletePopOver] = useState(false);
+  const [toggleStatus, setToggleStatus] = useState({});
   const { getUserPermissions } = useUserPermission();
   const { saveDataIngestion, isLoading } = useDataIngestion();
 
@@ -323,7 +328,7 @@ export default function AdvancedTable({
       });
 
       if (response.data.status !== "SUCCESS") return;
-      window.location.reload();
+      fetchDataCallBack();
 
       return;
     } catch (error) {
@@ -414,7 +419,7 @@ export default function AdvancedTable({
       [...rows]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   return (
@@ -434,7 +439,7 @@ export default function AdvancedTable({
             tableHeading={tableHeading}
             displayFilter={displayFilter}
           />
-          <TableContainer sx={{ maxHeight: "400px", borderRadius: "5px" }}>
+          <TableContainer sx={{ maxHeight: "500px", borderRadius: "5px" }}>
             <Table
               sx={{ minWidth: 750 }}
               size={dense ? "small" : "medium"}
@@ -454,6 +459,10 @@ export default function AdvancedTable({
                 {visibleRows.map((row, i) => {
                   const isItemSelected = selected.includes(row.id);
                   const labelId = `enhanced-table-checkbox-${i}`;
+                  const status = row["status"];
+                  const currentStatus = !IsObjectEmpty({ Obj: toggleStatus })
+                    ? toggleStatus[row.id]
+                    : status;
 
                   return (
                     <TableRow
@@ -548,42 +557,96 @@ export default function AdvancedTable({
                             </React.Fragment>
                           );
                         } else if (headCell.id == "status") {
-                          const status = row[headCell.id];
-
                           return (
                             <React.Fragment key={index}>
                               <TableCell>
-                                <Tooltip title={status ? "active" : "inactive"}>
-                                  <IconButton
-                                    size="small"
-                                    sx={{
-                                      backgroundColor: status ? "green" : "red",
-                                      ":hover": {
+                                {editingIdx !== i && (
+                                  <Tooltip
+                                    title={status ? "active" : "inactive"}
+                                  >
+                                    <IconButton
+                                      size="small"
+                                      sx={{
                                         backgroundColor: status
                                           ? "green"
                                           : "red",
-                                      },
+                                        ":hover": {
+                                          backgroundColor: status
+                                            ? "green"
+                                            : "red",
+                                        },
+                                      }}
+                                    >
+                                      {status ? (
+                                        <CheckIcon
+                                          color="white"
+                                          sx={{
+                                            fill: "white",
+                                            fontSize: "0.75em",
+                                          }}
+                                        />
+                                      ) : (
+                                        <ClearIcon
+                                          color="white"
+                                          sx={{
+                                            fill: "white",
+                                            fontSize: "0.75em",
+                                          }}
+                                        />
+                                      )}
+                                    </IconButton>
+                                  </Tooltip>
+                                )}
+                                {editingIdx != null && editingIdx == i && (
+                                  <ToggleButtonGroup
+                                    exclusive
+                                    value={currentStatus}
+                                    onChange={(e) => {
+                                      const value = e.target.value;
+                                      const target = {
+                                        name: "status",
+                                        value,
+                                      };
+
+                                      setToggleStatus((prev) => ({
+                                        ...prev,
+                                        [row.id]: value === "true",
+                                      }));
+                                      handleEditChange({ target });
                                     }}
                                   >
-                                    {status ? (
-                                      <CheckIcon
-                                        color="white"
-                                        sx={{
-                                          fill: "white",
-                                          fontSize: "0.75em",
-                                        }}
-                                      />
-                                    ) : (
-                                      <ClearIcon
-                                        color="white"
-                                        sx={{
-                                          fill: "white",
-                                          fontSize: "0.75em",
-                                        }}
-                                      />
-                                    )}
-                                  </IconButton>
-                                </Tooltip>
+                                    <ToggleButton
+                                      value={true}
+                                      aria-label="left aligned"
+                                      size="small"
+                                      style={{
+                                        color: currentStatus
+                                          ? "white"
+                                          : undefined,
+                                        background: currentStatus
+                                          ? "green"
+                                          : undefined,
+                                      }}
+                                    >
+                                      Active
+                                    </ToggleButton>
+                                    <ToggleButton
+                                      value={false}
+                                      aria-label="centered"
+                                      size="small"
+                                      style={{
+                                        color: !currentStatus
+                                          ? "white"
+                                          : undefined,
+                                        background: !currentStatus
+                                          ? "red"
+                                          : undefined,
+                                      }}
+                                    >
+                                      InActive
+                                    </ToggleButton>
+                                  </ToggleButtonGroup>
+                                )}
                               </TableCell>
                             </React.Fragment>
                           );

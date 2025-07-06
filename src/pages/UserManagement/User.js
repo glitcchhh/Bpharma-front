@@ -297,7 +297,7 @@ function User() {
       console.log({ error });
       return;
     }
-  }, []);
+  }, [setData, saveDataIngestion]);
 
   const fetchDistributor = useCallback(async () => {
     try {
@@ -351,8 +351,7 @@ function User() {
         });
 
         if (response.data.status !== "SUCCESS") return;
-
-        window.location.reload();
+        fetchData();
 
         return;
       } catch (error) {
@@ -379,6 +378,7 @@ function User() {
           buttonLabel="New User"
           url={insertURL}
           needEmployeeID={false}
+          fetchData={fetchData}
         />
       )}
 
@@ -395,6 +395,7 @@ function User() {
               displayFilter={false}
               acceptAction={false}
               rejectAction={false}
+              fetchDataCallBack={fetchData}
             />
           )}
         </>

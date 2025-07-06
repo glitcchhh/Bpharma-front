@@ -9,6 +9,7 @@ const AddNewUser = ({
   data = [],
   url,
   needEmployeeID,
+  fetchData,
 }) => {
   const [openAddUserModal, setOpenAddUserModal] = useState(false);
 
@@ -51,6 +52,7 @@ const AddNewUser = ({
         data={data}
         url={url}
         needEmployeeID={needEmployeeID}
+        fetchData={fetchData}
       />
     </>
   );

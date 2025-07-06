@@ -232,6 +232,7 @@ function Sample() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
+              fetchDataCallBack={fetchData}
             />
           )}
         </>

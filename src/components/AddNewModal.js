@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useAuth } from "../contexts/AuthProvider";
 import { useLocation } from "react-router-dom";
+import { IsObjectEmpty } from "../utils/index.js";
 
 const AddNewUserModal = ({
   open,
@@ -28,9 +29,10 @@ const AddNewUserModal = ({
   data = [],
   url = "/employee/create",
   needEmployeeID = true,
+  fetchData = () => {},
 }) => {
   const { saveDataIngestion } = useDataIngestion();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({});
   const { user } = useAuth();
   const [selectedValue, setSelectedValues] = useState({});
   const { pathname } = useLocation();
@@ -120,17 +122,19 @@ const AddNewUserModal = ({
 
       setTimeout(() => {
         handleClose();
-        window.location.reload();
+        fetchData();
       }, 500);
     } catch (error) {
       console.log("Error creating user:", error);
-      const errorDetails = error.response.data.error.details;
+      const errorDetails = error?.response?.data?.error?.details ?? {};
       setError(errorDetails);
     }
   };
 
   const showError = (name) => {
-    return error?.find(({ field }) => field == name) || null;
+    if (!IsObjectEmpty({ Obj: error }))
+      return error?.find(({ field }) => field == name) || null;
+    return null;
   };
 
   return (
@@ -223,16 +227,24 @@ const AddNewUserModal = ({
                 <Fragment key={index}>
                   <div>
                     <FormControl fullWidth size="small" sx={{ mt: "5px" }}>
-                      <InputLabel id={"product-select"}>{label}</InputLabel>
+                      <InputLabel id={`product-select-${index}`}>
+                        {label}
+                      </InputLabel>
                       <Select
-                        labelId={"product-select"}
-                        id="product-select-select"
+                        labelId={`product-select-${index}`}
+                        id={`product-select-select-${index}`}
                         label={label}
                         name={name}
                         onChange={handleChange}
+                        defaultValue={"select"}
                       >
+                        <MenuItem value={"select"}>{"Select"}</MenuItem>
                         {options.map(({ value, name }) => {
-                          return <MenuItem value={value}>{name}</MenuItem>;
+                          return (
+                            <MenuItem key={`${value}-${name}`} value={value}>
+                              {name}
+                            </MenuItem>
+                          );
                         })}
                       </Select>
                     </FormControl>
@@ -245,7 +257,6 @@ const AddNewUserModal = ({
             return (
               <Fragment key={index}>
                 <TextField
-                  key={index}
                   margin="dense"
                   id={name + index}
                   label={label}

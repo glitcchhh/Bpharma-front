@@ -241,7 +241,7 @@ function Distributor() {
 
         if (response.data.status !== "SUCCESS") return;
 
-        window.location.reload();
+        fetchData();
 
         return;
       } catch (error) {
@@ -249,7 +249,7 @@ function Distributor() {
         return;
       }
     },
-    [currentUserDetails, saveDataIngestion, updateURL]
+    [currentUserDetails, saveDataIngestion, updateURL, fetchData]
   );
 
   return (
@@ -281,6 +281,7 @@ function Distributor() {
               updateCellData={updateCellData}
               deleteURL={deleteURL}
               displayFilter={false}
+              fetchDataCallBack={fetchData}
             />
           )}
         </>

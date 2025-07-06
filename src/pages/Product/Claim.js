@@ -75,13 +75,13 @@ const headCells = [
     disablePadding: false,
     label: "Free Quantity",
   },
-  {
-    id: "more",
-    disablePadding: false,
-    label: "More",
-    notSortable: true,
-    fixedWidth: true,
-  },
+  // {
+  //   id: "more",
+  //   disablePadding: false,
+  //   label: "More",
+  //   notSortable: true,
+  //   fixedWidth: true,
+  // },
 ];
 
 const AddNewUserData = [
@@ -242,6 +242,7 @@ function Claim() {
               data={data}
               showMoreData={openModal}
               headCells={headCells}
+              fetchDataCallBack={fetchData}
             />
           )}
         </>
