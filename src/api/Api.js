@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Use environment variable for flexibility
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8001/api",
 });
 
 // Add auth token automatically if available

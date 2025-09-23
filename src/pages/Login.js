@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -7,18 +7,16 @@ import {
   FormControlLabel,
   TextField,
   Link,
-  Paper,
   Box,
   Typography,
   CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Grid from "@mui/material/Grid"; // Use stable Grid
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import { useLogin } from "../hooks/useLogin";
 
-const names = ["emp_code", "user_password"];
+const fieldNames = ["emp_code", "user_password"];
 
 export default function Login() {
   const { setUser, setToken } = useAuth();
@@ -26,13 +24,13 @@ export default function Login() {
   const navigate = useNavigate();
   const { saveLogin, loading } = useLogin();
 
-  // when this page is loaded token must be cleared
+  // Clear token on page load
   useEffect(() => {
     setToken("");
     sessionStorage.removeItem("site");
     localStorage.removeItem("site");
     localStorage.removeItem("user");
-  }, []);
+  }, [setToken]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,23 +40,23 @@ export default function Login() {
     const remember = data.get("remember-me");
 
     const loginData = {
-      [names[0]]: data.get(names[0]),
-      [names[1]]: data.get(names[1]),
+      email: data.get(fieldNames[0]), // map emp_code to email
+      password: data.get(fieldNames[1]), // map user_password to password
     };
 
     try {
       const response = await saveLogin(loginData);
       console.log({ response });
 
-      if (response.data.status !== "OK") {
+      // Match backend response
+      const user = response.user;
+      const auth_token = response.auth_token || "dummy-token"; // placeholder if token not returned
+
+      if (!user) {
         return navigate("/error");
       }
 
-      const user = response.data.data.userData;
-      const auth_token = response.data.data.auth_token;
-
-      // user.user = "tsm";
-      user.user = "super-admin";
+      user.user = "super-admin"; // optional
 
       setUser(user);
       setToken(auth_token);
@@ -70,21 +68,13 @@ export default function Login() {
       }
 
       localStorage.setItem("user", JSON.stringify(user));
-
       navigate("/dashboard");
-      return;
-    } catch (error) {
-      const errorMessage = error.response.data.error.message;
-      const email = errorMessage.find(({ field }) => field == names[0]);
-      const password = errorMessage.find(({ field }) => field == names[1]);
-
-      setError(() => {
-        return {
-          email,
-          password,
-        };
-      });
-      return;
+    } catch (err) {
+      console.error("Login error:", err);
+      const errorMessage = err.response?.data?.error?.message || [];
+      const email = errorMessage.find(({ field }) => field === fieldNames[0]);
+      const password = errorMessage.find(({ field }) => field === fieldNames[1]);
+      setError({ email, password });
     }
   };
 
@@ -92,119 +82,61 @@ export default function Login() {
   const passwordError = error?.password;
 
   return (
-    <Grid
-      container
-      component="main"
-      sx={{
-        marginTop: {
-          xs: "7em",
-          sm: 0,
-        },
-        padding: 0,
-        height: {
-          xs: "auto",
-          sm: "90vh",
-        },
-      }}
-      sm={12}
-    >
+    <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
-      <Grid
-        container
-        display={{
-          xs: "none",
-          md: "block",
-        }}
-        size={6}
-        sx={{
-          position: "relative",
-        }}
-      >
-        <Box
-          sx={{
-            paddingBottom: 6,
-            paddingX: {
-              xs: 2,
-              sm: 16,
-              md: 16,
-              lg: 6,
-              xl: 8,
-            },
 
-            paddingY: {
-              md: 6,
-              lg: 6,
-              xl: 6,
-            },
-          }}
-        >
+      {/* Left image */}
+      <Grid
+        item
+        xs={false}
+        sm={6}
+        md={6}
+        sx={{ display: { xs: "none", md: "block" }, position: "relative" }}
+      >
+        <Box sx={{ height: "100%", position: "relative" }}>
           <img
             src={`${process.env.PUBLIC_URL}/login.png`}
             alt="Login"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "scale-down",
-              position: "absolute",
-              top: 0,
-              left: 0,
-            }}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         </Box>
       </Grid>
+
+      {/* Right form */}
       <Grid
+        item
+        xs={12}
+        sm={6}
+        md={6}
         sx={{
-          boxShadow: "none",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-        }}
-        container
-        size={{
-          xs: 12,
-          sm: 12,
-          md: 6,
+          px: { xs: 3, sm: 6 },
         }}
       >
-        <Box
-          sx={{
-            paddingBottom: 6,
-            paddingX: {
-              xs: 2,
-              sm: 4,
-              md: 8,
-              lg: 12,
-              xl: 16,
-            },
-
-            paddingY: 6,
-          }}
-          width={{
-            xs: "100%",
-            sm: "80%",
-            md: "100%",
-          }}
-        >
+        <Box sx={{ width: "100%", maxWidth: 400 }}>
           <img
             src={`${process.env.PUBLIC_URL}/logo.png`}
             alt="BBMS Logo"
-            style={{ height: "30px", objectFit: "contain" }}
+            style={{ height: "30px", objectFit: "contain", marginBottom: "20px" }}
           />
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit} // Use handleSubmit on form submission
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit}>
+            {error?.message && (
+              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                {error.message}
+              </Typography>
+            )}
+
             <TextField
               margin="normal"
               required
               fullWidth
-              id={names[0]}
+              id={fieldNames[0]}
               label="Email Address"
-              name={names[0]}
-              autoComplete={names[0]}
+              name={fieldNames[0]}
+              autoComplete={fieldNames[0]}
               autoFocus
               error={!!mailError?.field}
               helperText={mailError?.message}
@@ -213,35 +145,32 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              name={names[1]}
-              label="password"
-              type={"password"}
-              id={names[1]}
-              autoComplete={names[1]}
+              name={fieldNames[1]}
+              label="Password"
+              type="password"
+              id={fieldNames[1]}
+              autoComplete={fieldNames[1]}
               error={!!passwordError?.field}
               helperText={passwordError?.message}
             />
+
             <FormControlLabel
-              control={
-                <Checkbox name="remember-me" value={true} color="primary" />
-              }
+              control={<Checkbox name="remember-me" value="true" color="primary" />}
               label="Remember me"
             />
+
             <Button
-              type="submit" // This button triggers the form submit event
+              type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, textTransform: "none" }}
+              sx={{ mt: 3, mb: 2 }}
             >
               {loading ? (
                 <>
                   Please wait
                   <CircularProgress
                     size={14}
-                    sx={{
-                      color: "white",
-                      ml: 1,
-                    }}
+                    sx={{ color: "white", ml: 1 }}
                   />
                 </>
               ) : (
@@ -249,51 +178,14 @@ export default function Login() {
               )}
             </Button>
 
-            <Grid
-              container
-              size={12}
-              marginTop={{
-                xs: 3,
-                sm: 0,
-              }}
-            >
-              <Grid
-                size={{
-                  xs: 12,
-                  sm: 4,
-                  md: 12,
-                  lg: 4,
-                }}
-                textAlign={{
-                  xs: "start",
-                }}
-                marginTop="5px"
-              >
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
                 <Link href="/forgot-password" variant="body2">
-                  Forgot your password?
+                  Forgot password?
                 </Link>
               </Grid>
-              <Grid
-                marginTop="5px"
-                size={{
-                  xs: 12,
-                  sm: 8,
-                  md: 12,
-                  lg: 8,
-                }}
-              >
-                <Link
-                  href="/sign-up"
-                  variant="body2"
-                  sx={{
-                    float: {
-                      xs: "left",
-                      sm: "right",
-                      md: "left",
-                      lg: "right",
-                    },
-                  }}
-                >
+              <Grid item xs={6} textAlign="right">
+                <Link href="/sign-up" variant="body2">
                   Don't have an account? Sign Up
                 </Link>
               </Grid>

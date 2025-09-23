@@ -1,283 +1,171 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Button,
   Checkbox,
   CssBaseline,
   FormControlLabel,
   TextField,
   Link,
-  Paper,
   Box,
   Typography,
+  Paper,
+  Grid,
+  CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useAuth } from "../contexts/AuthProvider";
-import { useLogin } from "../hooks/useLogin";
-
-const names = ["emp_code", "user_password", "phone"];
+import { useNavigate } from "react-router-dom";
+import Api from "../api/Api"; // Your axios instance
 
 export default function SignUp() {
-  const { setUser, setToken } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { saveLogin } = useLogin();
-
-  // when this page is loaded token must be cleared
-  useEffect(() => {
-    setToken("");
-    sessionStorage.removeItem("site");
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);
+    setLoading(true);
+
     const data = new FormData(event.currentTarget);
 
-    const loginData = {
-      [names[0]]: data.get(names[0]),
-      [names[1]]: data.get(names[1]),
+    const signupData = {
+      email: data.get("emp_code"),       // map emp_code field to email
+      password: data.get("user_password"),
+      phone: data.get("phone") || null,
     };
 
     try {
-      const response = await saveLogin(loginData);
-      console.log({ response });
+      const response = await Api.post("/signup", signupData);
 
-      if (response.data.status !== "OK") return;
-      const user = response.data.data.userData;
-      const auth_token = response.data.data.auth_token;
-
-      setUser(user);
-      setToken(auth_token);
-      sessionStorage.setItem("site", auth_token);
-
-      navigate("/dashboard");
-      return;
-    } catch (error) {
-      const errorMessage = error.response.data.error.message;
-      const email = errorMessage.find(({ field }) => field == names[0]);
-      const password = errorMessage.find(({ field }) => field == names[1]);
-
-      setError(() => {
-        return {
-          email,
-          password,
-        };
-      });
-      return;
+      if (response.data?.message) {
+        // Signup successful
+        navigate("/login"); // redirect to login page
+      } else {
+        setError({ message: "Signup failed. Please try again." });
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      const msg =
+        err.response?.data?.message || "Server error. Please try again.";
+      setError({ message: msg });
     }
+
+    setLoading(false);
   };
 
-  const mailError = error?.email;
-  const passwordError = error?.password;
-
   return (
-    <Grid
-      container
-      component="main"
-      sx={{
-        marginTop: {
-          xs: "7em",
-          sm: 0,
-        },
-        padding: 0,
-        height: {
-          xs: "auto",
-          sm: "90vh",
-        },
-      }}
-      sm={12}
-    >
+    <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
-      <Grid
-        container
-        display={{
-          xs: "none",
-          md: "block",
-        }}
-        size={6}
-        item
-        sx={{
-          position: "relative",
-        }}
-      >
-        <Box
-          sx={{
-            paddingBottom: 6,
-            paddingX: {
-              xs: 2,
-              sm: 16,
-              md: 16,
-              lg: 6,
-              xl: 8,
-            },
 
-            paddingY: {
-              md: 6,
-              lg: 6,
-              xl: 6,
-            },
-          }}
-        >
+      {/* Left image */}
+      <Grid
+        item
+        xs={false}
+        sm={6}
+        md={6}
+        sx={{ display: { xs: "none", md: "block" }, position: "relative" }}
+      >
+        <Box sx={{ height: "100%", position: "relative" }}>
           <img
             src={`${process.env.PUBLIC_URL}/login.png`}
-            alt="Login"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "scale-down",
-              position: "absolute",
-              top: 0,
-              left: 0,
-            }}
+            alt="Sign Up"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         </Box>
       </Grid>
+
+      {/* Right form */}
       <Grid
         item
+        xs={12}
+        sm={6}
+        md={6}
+        component={Paper}
+        elevation={0}
         square
         sx={{
-          boxShadow: "none",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-        }}
-        container
-        size={{
-          xs: 12,
-          sm: 12,
-          md: 6,
+          px: { xs: 3, sm: 6 },
         }}
       >
-        <Box
-          sx={{
-            paddingBottom: 6,
-            paddingX: {
-              xs: 2,
-              sm: 4,
-              md: 8,
-              lg: 12,
-              xl: 16,
-            },
-
-            paddingY: 6,
-          }}
-          width={{
-            xs: "100%",
-            sm: "80%",
-            md: "100%",
-          }}
-        >
+        <Box sx={{ width: "100%", maxWidth: 400 }}>
           <img
             src={`${process.env.PUBLIC_URL}/logo.png`}
             alt="BBMS Logo"
-            style={{ height: "30px", objectFit: "contain" }}
+            style={{ height: "30px", objectFit: "contain", marginBottom: "20px" }}
           />
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit} // Use handleSubmit on form submission
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id={names[0]}
-              label="Email Address"
-              name={names[0]}
-              autoComplete={names[0]}
-              autoFocus
-              error={!!mailError?.field}
-              helperText={mailError?.message}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name={names[1]}
-              label="password"
-              type={"password"}
-              id={names[1]}
-              autoComplete={names[1]}
-              error={!!passwordError?.field}
-              helperText={passwordError?.message}
-            />
+          <Box component="form" noValidate onSubmit={handleSubmit}>
+            {error?.message && (
+              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                {error.message}
+              </Typography>
+            )}
 
             <TextField
               margin="normal"
               required
               fullWidth
-              name={names[2]}
-              label="phone"
-              type={"tel"}
-              id={names[2]}
-              autoComplete={names[2]}
-              error={!!passwordError?.field}
-              helperText={passwordError?.message}
+              id="emp_code"
+              label="Email Address"
+              name="emp_code"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="user_password"
+              label="Password"
+              type="password"
+              id="user_password"
+              autoComplete="new-password"
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              name="phone"
+              label="Phone"
+              type="tel"
+              id="phone"
+              autoComplete="tel"
             />
 
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+
             <Button
-              type="submit" // This button triggers the form submit event
+              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <>
+                  Please wait
+                  <CircularProgress
+                    size={14}
+                    sx={{ color: "white", ml: 1 }}
+                  />
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
-            <Grid
-              container
-              size={12}
-              marginTop={{
-                xs: 3,
-                sm: 0,
-              }}
-            >
-              <Grid
-                item
-                size={{
-                  xs: 12,
-                  sm: 4,
-                  md: 12,
-                  lg: 4,
-                }}
-                textAlign={{
-                  xs: "start",
-                }}
-                marginTop="5px"
-              >
+
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
                 <Link href="/forgot-password" variant="body2">
-                  Forgot your password?
+                  Forgot password?
                 </Link>
               </Grid>
-              <Grid
-                item
-                marginTop="5px"
-                size={{
-                  xs: 12,
-                  sm: 8,
-                  md: 12,
-                  lg: 8,
-                }}
-              >
-                <Link
-                  href="/login"
-                  variant="body2"
-                  sx={{
-                    float: {
-                      xs: "left",
-                      sm: "right",
-                      md: "left",
-                      lg: "right",
-                    },
-                  }}
-                >
+              <Grid item xs={6} textAlign="right">
+                <Link href="/login" variant="body2">
                   Already have an account? Login
                 </Link>
               </Grid>
