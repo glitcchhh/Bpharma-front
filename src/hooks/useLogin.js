@@ -1,56 +1,22 @@
 import { useCallback, useState } from "react";
-import Api from "../api/Api";
+import Api from "../api/Api"; // Axios instance
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Generic function for login or signup
-   * @param {Object} data - { email, password }
-   * @param {String} type - "login" or "signup"
-   */
-  const saveLogin = useCallback(async (data, type = "login") => {
+  const saveLogin = useCallback(async (loginData) => {
     setLoading(true);
-
-    let responseData = {
-      status: "failed",
-      message: "Unknown error",
-    };
-
-    if (!data.email || !data.password) {
-      setLoading(false);
-      return { status: "failed", message: "Email and password are required" };
-    }
-
-    const endpoint = type === "signup" ? "/signup" : "/login";
+    let responseData = { status: "failed", message: "Unknown error" };
 
     try {
-      const response = await Api.post(endpoint, {
-        email: data.email,
-        password: data.password,
-      });
-
-      // Assuming backend returns { status: "OK", data: { userData, auth_token } }
-      responseData = response.data;
-
-      // For signup, backend may just return message, so normalize
-      if (!responseData.status) {
-        responseData.status = "OK";
-      }
+      const response = await Api.post("/login", loginData);
+      responseData = response.data; // Use backend response directly
     } catch (error) {
-      console.error("Login error:", {
-        message: error.message,
-        response: error.response?.data,
-      });
-
-      if (error.response?.data) {
-        responseData = {
-          status: "failed",
-          ...error.response.data,
-        };
-      } else {
-        responseData.message = error.message;
-      }
+      console.error("Login error:", { message: error.message, response: error.response?.data });
+      responseData = {
+        status: "failed",
+        message: error.response?.data?.message || error.message,
+      };
     }
 
     setLoading(false);
