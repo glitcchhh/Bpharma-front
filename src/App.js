@@ -10,7 +10,7 @@ import {
 import Header from "./components/header";
 import "./assets/scss/custom.scss";
 
-import ResponsiveDrawer from "./components/SideBarNew";
+import ResponsiveDrawer from "./components/sidebar";
 import { Box } from "@mui/material";
 import AuthProvider, { useAuth } from "./contexts/AuthProvider";
 import { Height } from "@mui/icons-material";

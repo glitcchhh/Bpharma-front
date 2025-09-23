@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useAuth } from "../../contexts/AuthProvider";
 import AdvancedTable from "../../components/AdvancedTable";
-import AddNewUser from "../../components/AddNewUser";
+import AddNewUser from "../../components/AddNewUserModal";
 import TableModal from "../../components/TableModal";
 import { useUserPermission } from "../../hooks/useUserPermissions";
 

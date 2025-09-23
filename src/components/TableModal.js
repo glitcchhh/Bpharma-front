@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import AdvancedTable from "./AdvancedTable";
-import { useUserPermission } from "../hooks/useUserPermission";
+import { useUserPermission } from "../hooks/useUserPermissions";
 
 const style = {
   position: "absolute",

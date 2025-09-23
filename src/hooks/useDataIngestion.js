@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Api } from "../api/Api";
+import Api from "../api/Api";
 import { useAuth } from "../contexts/AuthProvider";
 
 export const useDataIngestion = () => {

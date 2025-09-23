@@ -4,7 +4,7 @@ import { useAuth } from "../../contexts/AuthProvider";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useLocation, useNavigate } from "react-router-dom";
 import AdvancedTable from "../../components/AdvancedTable";
-import AddNewUser from "../../components/AddNewUser";
+import AddNewUser from "../../components/AddNewUserModal";
 import TableModal from "../../components/TableModal";
 import { getMonthName } from "../../constants/Constants";
 import { useUserPermission } from "../../hooks/useUserPermissions";

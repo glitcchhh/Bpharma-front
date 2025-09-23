@@ -14,7 +14,7 @@ import AddIcon from "@mui/icons-material/Add";
 import NewUserModal from "./component/NewUserModal"; // Import the modal component
 import { red } from "@mui/material/colors";
 import TableModal from "../../components/TableModal";
-import AddNewUser from "../../components/AddNewUser";
+import AddNewUser from "../../components/AddNewUserModal";
 import AdvancedTable from "../../components/AdvancedTable";
 import { useDataIngestion } from "../../hooks/useDataIngestion";
 import { useNavigate } from "react-router-dom";

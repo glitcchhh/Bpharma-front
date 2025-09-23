@@ -11,7 +11,7 @@ import {
   Paper,
 } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import AddNewUser from "../../components/AddNewUser";
+import AddNewUser from "../../components/AddNewUserModal";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useUserPermission } from "../../hooks/useUserPermissions";
