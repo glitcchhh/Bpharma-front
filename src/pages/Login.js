@@ -63,7 +63,8 @@ export default function Login() {
 
       localStorage.setItem("user", JSON.stringify(user));
 
-      navigate("/dashboard"); // ✅ Navigate after successful login
+      navigate("/Product/claim");  // ✅ goes to Claim.js page
+ // ✅ Navigate after successful login
     } catch (err) {
       console.error("Login error:", err);
       setError({ message: "Server error. Please try again." });
